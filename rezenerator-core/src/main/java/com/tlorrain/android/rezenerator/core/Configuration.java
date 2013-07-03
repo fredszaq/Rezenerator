@@ -1,12 +1,15 @@
 package com.tlorrain.android.rezenerator.core;
 
 import java.io.File;
+import java.util.LinkedList;
+import java.util.List;
 
 public class Configuration {
 	private File inDir;
 	private File baseOutDir;
 	private boolean verbose = true;
 	private boolean forceUpdate = false;
+	private List<String> scannedPackages = new LinkedList<String>();
 
 	public File getInDir() {
 		return inDir;
@@ -41,6 +44,15 @@ public class Configuration {
 
 	public Configuration setForceUpdate(boolean forceUpdate) {
 		this.forceUpdate = forceUpdate;
+		return this;
+	}
+
+	public List<String> getScannedPackages() {
+		return scannedPackages;
+	}
+
+	public Configuration addScannedPackage(String scannedPackage) {
+		scannedPackages.add(scannedPackage);
 		return this;
 	}
 

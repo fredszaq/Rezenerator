@@ -1,25 +1,27 @@
 package com.tlorrain.android.rezenerator.core;
 
 import java.io.File;
+import java.lang.reflect.Modifier;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
+import org.reflections.Reflections;
+
+import com.google.common.base.CaseFormat;
+
 public class RezeneratorRunner {
 
-	private Map<String, DefinitionWrapper> definitions = new HashMap<String, DefinitionWrapper>();
+	private Map<String, DefinitionWrapper> definitions;
 
-	private Map<String, Processor> processors = new HashMap<String, Processor>();
-
-	{
-		definitions.put("launcher_icon", new DefinitionWrapper(LauncherIcon.class));
-		processors.put("inkscape", new Inkscape());
-	}
+	private Map<String, Processor> processors;
 
 	public void run(Configuration configuration) {
 		final File inDir = configuration.getInDir();
 		final File baseOutDir = configuration.getBaseOutDir();
+		init(configuration.getScannedPackages());
 		if (!inDir.exists() || !inDir.isDirectory()) {
 			throw new IllegalStateException(inDir.getName() + " doesn't exist or is not a directory !");
 		}
@@ -56,6 +58,34 @@ public class RezeneratorRunner {
 		System.out.println("Done !");
 	}
 
+	private void init(List<String> scannedPackages) {
+		definitions = new HashMap<String, DefinitionWrapper>();
+		processors = new HashMap<String, Processor>();
+		try {
+			for (String packageName : scannedPackages) {
+				Reflections reflections = new Reflections(packageName);
+				for (Class<?> definitionClass : reflections.getTypesAnnotatedWith(Definition.class)) {
+					if (!Modifier.isAbstract(definitionClass.getModifiers())) {
+						definitions.put(converName(definitionClass), new DefinitionWrapper(definitionClass));
+					}
+				}
+				for (Class<?> processorClass : reflections.getSubTypesOf(Processor.class)) {
+					if (!Modifier.isAbstract(processorClass.getModifiers())) {
+						processors.put(converName(processorClass), (Processor) processorClass.newInstance());
+					}
+				}
+
+			}
+		} catch (Exception e) {
+			throw new RuntimeException("Could not init Rezenerator", e);
+		}
+
+	}
+
+	private String converName(Class<?> clazz) {
+		return CaseFormat.UPPER_CAMEL.to(CaseFormat.LOWER_UNDERSCORE, clazz.getSimpleName());
+	}
+
 	private File getOutFile(File baseOutDir, String qualifier, String bareFileName) {
 		File outDir = new File(baseOutDir, "drawable-" + qualifier);
 		if (!outDir.exists()) {
@@ -65,6 +95,6 @@ public class RezeneratorRunner {
 	}
 
 	public static void main(String[] args) {
-		new RezeneratorRunner().run(new Configuration().setInDir(new File("src/test/resources")).setBaseOutDir(new File("target/test")));
+		new RezeneratorRunner().run(new Configuration().setInDir(new File("src/test/resources")).setBaseOutDir(new File("target/test")).addScannedPackage("com.tlorrain.android"));
 	}
 }
