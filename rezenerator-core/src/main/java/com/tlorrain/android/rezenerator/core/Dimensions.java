@@ -24,6 +24,14 @@ public class Dimensions {
 		return new Dimensions(height / divisor, width / divisor);
 	}
 
+	public Dimensions scaleToWidth(final int newWidth) {
+		return new Dimensions(height * newWidth / width, newWidth);
+	}
+
+	public Dimensions scaleToHeight(final int newHeight) {
+		return new Dimensions(newHeight, width * newHeight / height);
+	}
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -47,6 +55,11 @@ public class Dimensions {
 		if (width != other.width)
 			return false;
 		return true;
+	}
+
+	@Override
+	public String toString() {
+		return "Dimensions [height=" + height + ", width=" + width + "]";
 	}
 
 }
