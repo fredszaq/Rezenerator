@@ -1,6 +1,9 @@
 package com.tlorrain.android.rezenerator.core;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.lang.reflect.Modifier;
 import java.util.HashMap;
 import java.util.List;
@@ -40,22 +43,58 @@ public class RezeneratorRunner {
 				Set<Entry<String, Dimensions>> entrySet = definitionWrapper.getConfigurations().entrySet();
 				for (Entry<String, Dimensions> entry : entrySet) {
 					File outFile = getOutFile(baseOutDir, entry.getKey(), bareFileName);
-					if (outFile.exists() && outFile.lastModified() > inFile.lastModified()) {
+					if (shouldProcess(inFile, outFile, entry.getValue())) {
+						processor.process(inFile, outFile, entry.getValue());
+					} else {
 						System.out.println("skipping " + outFile);
-						continue;
 					}
-					processor.process(inFile, outFile, entry.getValue());
 				}
-			} catch (IllegalArgumentException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (IllegalAccessException e) {
+			} catch (Exception e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 
 		}
 		System.out.println("Done !");
+	}
+
+	private boolean shouldProcess(File inFile, File outFile, Dimensions dims) throws IOException {
+		if (!(outFile.exists() && outFile.lastModified() > inFile.lastModified())) {
+			return true;
+		}
+
+		// this code is largely inspired from
+		// http://blog.jaimon.co.uk/simpleimageinfo/SimpleImageInfo.java.html
+		// credits to him (Apache 2 Licence)
+		FileInputStream is = new FileInputStream(outFile);
+		try {
+			int c1 = is.read();
+			int c2 = is.read();
+			int c3 = is.read();
+
+			if (c1 == 137 && c2 == 80 && c3 == 78) { // PNG file
+				is.skip(15);
+				int width = readInt(is, 2, true);
+				is.skip(2);
+				int height = readInt(is, 2, true);
+				return !new Dimensions(height, width).equals(dims);
+			}
+		} finally {
+			is.close();
+		}
+
+		return true;
+	}
+
+	private int readInt(InputStream is, int noOfBytes, boolean bigEndian) throws IOException {
+		int ret = 0;
+		int sv = bigEndian ? ((noOfBytes - 1) * 8) : 0;
+		int cnt = bigEndian ? -8 : 8;
+		for (int i = 0; i < noOfBytes; i++) {
+			ret |= is.read() << sv;
+			sv += cnt;
+		}
+		return ret;
 	}
 
 	private void init(List<String> scannedPackages) {
