@@ -57,7 +57,33 @@ public class RezeneratorRunnerTest {
 		assertThat(xxhdpi.lastModified()).isGreaterThan(lastModifiedXxhdpi);
 
 		checkOutDir(outDir);
+	}
 
+	@Test
+	public void forceUpdate() throws Exception {
+		rezeneratorRunner.run(config);
+		checkOutDir(outDir);
+		File mdpi = getOutFile(outDir, "mdpi");
+		File hdpi = getOutFile(outDir, "hdpi");
+		File xhdpi = getOutFile(outDir, "xhdpi");
+		File xxhdpi = getOutFile(outDir, "xxhdpi");
+
+		long lastModifiedMdpi = mdpi.lastModified();
+		long lastModifiedHdpi = hdpi.lastModified();
+		long lastModifiedXhdpi = xhdpi.lastModified();
+		long lastModifiedXxhdpi = xxhdpi.lastModified();
+
+		Thread.sleep(1000); // time resolution on some files systems is 1s, so
+							// lets wait that to be sure
+
+		rezeneratorRunner.run(config().setForceUpdate(true));
+
+		assertThat(mdpi.lastModified()).isGreaterThan(lastModifiedMdpi);
+		assertThat(hdpi.lastModified()).isGreaterThan(lastModifiedHdpi);
+		assertThat(xhdpi.lastModified()).isGreaterThan(lastModifiedXhdpi);
+		assertThat(xxhdpi.lastModified()).isGreaterThan(lastModifiedXxhdpi);
+
+		checkOutDir(outDir);
 	}
 
 	private Configuration config() {

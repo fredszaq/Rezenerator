@@ -43,7 +43,7 @@ public class RezeneratorRunner {
 				Set<Entry<String, Dimensions>> entrySet = definitionWrapper.getConfigurations().entrySet();
 				for (Entry<String, Dimensions> entry : entrySet) {
 					File outFile = getOutFile(baseOutDir, entry.getKey(), bareFileName);
-					if (shouldProcess(inFile, outFile, entry.getValue())) {
+					if (configuration.isForceUpdate() || shouldProcess(inFile, outFile, entry.getValue())) {
 						processor.process(inFile, outFile, entry.getValue());
 					} else {
 						System.out.println("skipping " + outFile);
