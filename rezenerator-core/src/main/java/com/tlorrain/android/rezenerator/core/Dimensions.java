@@ -8,6 +8,10 @@ public class Dimensions {
 		this.width = width;
 	}
 
+	public Dimensions(int squareSize) {
+		this(squareSize, squareSize);
+	}
+
 	public int getHeight() {
 		return height;
 	}

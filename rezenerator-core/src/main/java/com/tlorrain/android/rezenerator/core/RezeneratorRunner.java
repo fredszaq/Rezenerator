@@ -1,9 +1,9 @@
 package com.tlorrain.android.rezenerator.core;
 
+import static com.tlorrain.android.rezenerator.core.PNGFileUtils.getDimensions;
+
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.lang.reflect.Modifier;
 import java.util.HashMap;
 import java.util.List;
@@ -63,38 +63,7 @@ public class RezeneratorRunner {
 			return true;
 		}
 
-		// this code is largely inspired from
-		// http://blog.jaimon.co.uk/simpleimageinfo/SimpleImageInfo.java.html
-		// credits to him (Apache 2 Licence)
-		FileInputStream is = new FileInputStream(outFile);
-		try {
-			int c1 = is.read();
-			int c2 = is.read();
-			int c3 = is.read();
-
-			if (c1 == 137 && c2 == 80 && c3 == 78) { // PNG file
-				is.skip(15);
-				int width = readInt(is, 2, true);
-				is.skip(2);
-				int height = readInt(is, 2, true);
-				return !new Dimensions(height, width).equals(dims);
-			}
-		} finally {
-			is.close();
-		}
-
-		return true;
-	}
-
-	private int readInt(InputStream is, int noOfBytes, boolean bigEndian) throws IOException {
-		int ret = 0;
-		int sv = bigEndian ? ((noOfBytes - 1) * 8) : 0;
-		int cnt = bigEndian ? -8 : 8;
-		for (int i = 0; i < noOfBytes; i++) {
-			ret |= is.read() << sv;
-			sv += cnt;
-		}
-		return ret;
+		return !dims.equals(getDimensions(outFile));
 	}
 
 	private void init(List<String> scannedPackages) {
@@ -131,9 +100,5 @@ public class RezeneratorRunner {
 			outDir.mkdirs();
 		}
 		return new File(outDir, bareFileName);
-	}
-
-	public static void main(String[] args) {
-		new RezeneratorRunner().run(new Configuration().setInDir(new File("src/test/resources")).setBaseOutDir(new File("target/test")).addScannedPackage("com.tlorrain.android"));
 	}
 }
