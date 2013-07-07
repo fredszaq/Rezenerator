@@ -1,4 +1,4 @@
-package com.tlorrain.android.rezenerator.core;
+package com.tlorrain.android.rezenerator.core.definition;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;

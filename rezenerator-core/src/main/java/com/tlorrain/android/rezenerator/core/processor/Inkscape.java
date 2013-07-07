@@ -1,7 +1,9 @@
-package com.tlorrain.android.rezenerator.core;
+package com.tlorrain.android.rezenerator.core.processor;
 
 import java.io.File;
 import java.io.IOException;
+
+import com.tlorrain.android.rezenerator.core.Dimensions;
 
 public class Inkscape extends ExternalProcessProcessor {
 	@Override

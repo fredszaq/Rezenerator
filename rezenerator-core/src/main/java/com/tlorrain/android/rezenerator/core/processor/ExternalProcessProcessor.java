@@ -1,6 +1,9 @@
-package com.tlorrain.android.rezenerator.core;
+package com.tlorrain.android.rezenerator.core.processor;
 
 import java.io.File;
+
+import com.tlorrain.android.rezenerator.core.Dimensions;
+import com.tlorrain.android.rezenerator.core.utils.ExternalProcessUtils;
 
 public abstract class ExternalProcessProcessor implements Processor {
 

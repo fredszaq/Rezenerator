@@ -1,4 +1,4 @@
-package com.tlorrain.android.rezenerator.core;
+package com.tlorrain.android.rezenerator.core.utils;
 
 import java.io.BufferedReader;
 import java.io.IOException;

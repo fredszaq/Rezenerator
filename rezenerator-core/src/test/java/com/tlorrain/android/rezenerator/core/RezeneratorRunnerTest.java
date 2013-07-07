@@ -12,6 +12,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import com.google.common.collect.ImmutableMap;
+import com.tlorrain.android.rezenerator.core.utils.PNGFileUtils;
 
 public class RezeneratorRunnerTest {
 

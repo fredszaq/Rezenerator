@@ -1,10 +1,12 @@
-package com.tlorrain.android.rezenerator.core;
+package com.tlorrain.android.rezenerator.core.utils;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+
+import com.tlorrain.android.rezenerator.core.Dimensions;
 
 public class PNGFileUtils {
 

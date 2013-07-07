@@ -1,8 +1,10 @@
-package com.tlorrain.android.rezenerator.core;
+package com.tlorrain.android.rezenerator.core.definition;
 
 import java.lang.reflect.Field;
 import java.util.Map;
 import java.util.TreeMap;
+
+import com.tlorrain.android.rezenerator.core.Dimensions;
 
 public class DefinitionWrapper {
 

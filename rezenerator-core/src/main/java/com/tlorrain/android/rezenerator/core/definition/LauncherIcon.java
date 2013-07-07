@@ -1,4 +1,6 @@
-package com.tlorrain.android.rezenerator.core;
+package com.tlorrain.android.rezenerator.core.definition;
+
+import com.tlorrain.android.rezenerator.core.Dimensions;
 
 @Definition
 public class LauncherIcon {

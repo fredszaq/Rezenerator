@@ -1,6 +1,8 @@
-package com.tlorrain.android.rezenerator.core;
+package com.tlorrain.android.rezenerator.core.processor;
 
 import java.io.File;
+
+import com.tlorrain.android.rezenerator.core.Dimensions;
 
 public interface Processor {
 

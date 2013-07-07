@@ -1,6 +1,6 @@
 package com.tlorrain.android.rezenerator.core;
 
-import static com.tlorrain.android.rezenerator.core.PNGFileUtils.getDimensions;
+import static com.tlorrain.android.rezenerator.core.utils.PNGFileUtils.getDimensions;
 
 import java.io.File;
 import java.io.IOException;
@@ -14,6 +14,9 @@ import java.util.Set;
 import org.reflections.Reflections;
 
 import com.google.common.base.CaseFormat;
+import com.tlorrain.android.rezenerator.core.definition.Definition;
+import com.tlorrain.android.rezenerator.core.definition.DefinitionWrapper;
+import com.tlorrain.android.rezenerator.core.processor.Processor;
 
 public class RezeneratorRunner {
 
