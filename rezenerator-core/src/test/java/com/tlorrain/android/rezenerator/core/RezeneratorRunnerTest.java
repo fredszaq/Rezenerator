@@ -3,8 +3,6 @@ package com.tlorrain.android.rezenerator.core;
 import static org.fest.assertions.Assertions.assertThat;
 
 import java.io.File;
-import java.nio.file.Files;
-import java.nio.file.StandardCopyOption;
 import java.util.Map;
 
 import org.apache.commons.io.FileUtils;
@@ -45,7 +43,7 @@ public class RezeneratorRunnerTest {
 		long lastModifiedHdpi = hdpi.lastModified();
 		long lastModifiedXhdpi = xhdpi.lastModified();
 		long lastModifiedXxhdpi = xxhdpi.lastModified();
-		Files.copy(xhdpi.toPath(), xxhdpi.toPath(), StandardCopyOption.REPLACE_EXISTING);
+		FileUtils.copyFile(xhdpi, xxhdpi);
 
 		Thread.sleep(1000); // time resolution on some files systems is 1s, so
 							// lets wait that to be sure
