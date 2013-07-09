@@ -28,7 +28,7 @@ public abstract class ProcessorTestCase {
 		String[] split = baseFileName.split("\\.");
 		File outFile = new File(outDir, split[0] + ".png");
 		Dimensions outDims = new Dimensions(512);
-		getProcessorClass().newInstance().process(new File("src/test/resources/" + baseFileName), outFile, outDims);
+		getProcessorClass().newInstance().process(new File("src/test/resources/processor/" + baseFileName), outFile, outDims);
 		assertThat(PNGFileUtils.getDimensions(outFile)).isEqualTo(outDims);
 	}
 

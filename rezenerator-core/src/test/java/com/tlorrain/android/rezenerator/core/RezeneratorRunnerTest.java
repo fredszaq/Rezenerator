@@ -86,7 +86,7 @@ public class RezeneratorRunnerTest {
 	}
 
 	private Configuration config() {
-		return new Configuration().setInDir(new File("src/test/resources")).setBaseOutDir(outDir).addScannedPackage("com.tlorrain.android");
+		return new Configuration().setInDir(new File("src/test/resources/runner")).setBaseOutDir(outDir).addScannedPackage("com.tlorrain.android");
 	}
 
 	private void checkOutDir(File outDir) throws Exception {
