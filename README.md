@@ -2,7 +2,9 @@
 
 ![Rezenerator icon](../../raw/master/rezenerator.png)
 
-Rezenerator is a tool aiming at automating drawable management while building an Android app. The way it works is simple, you provide in a directory your "source" drawable files, such as SVG files, PSD files (soon to come) or high resolution PNG files, and the tool will automatically generate the corresponding PNG files in the required drawable-* folders of your application.
+Rezenerator is a tool aiming at automating drawable management while building an Android app. The way it works is simple, you provide in a directory your "source" drawable files, such as SVG files, PSD files or high resolution PNG files, and the tool will automatically generate the corresponding PNG files in the required drawable-* folders of your application.
+
+## Operating principle
 
 Rezenerator is highly configurable and flexible. The transformations to apply to the sources file are encoded within the file names using this simple schema :
 
@@ -15,4 +17,13 @@ Rezenerator is highly configurable and flexible. The transformations to apply to
 
 Rezenerator is available as a standalone jar, a maven plugin and soon a graddle plugin.
 
-Please note this is still a work in progress !
+## Available processors
+* Inkscape for SVG files (an every other forma inkscape can open)
+* ImageMagick for lots of formats (including PNG, PSD ...)
+Please note that these processors use extrenal tools that must be installed and accessible in the path.
+
+
+
+## Note
+
+This is still a work in progress !
