@@ -32,10 +32,10 @@ public class RezeneratorRunner {
 			throw new IllegalStateException(inDir.getName() + " doesn't exist or is not a directory !");
 		}
 		for (File inFile : inDir.listFiles()) {
-			System.out.println("Processing file : " + inFile.getName());
+			configuration.getLogger().info("Processing file : " + inFile.getName());
 			String[] nameSplit = inFile.getName().split("\\.");
 			if (nameSplit.length != 4) {
-				System.out.println("\tERROR : filename must be formated this way : android_id.definition.processor.ext");
+				configuration.getLogger().error("Filename must be formated this way : android_id.definition.processor.ext");
 				continue;
 			}
 			String bareFileName = nameSplit[0] + ".png";
@@ -47,18 +47,18 @@ public class RezeneratorRunner {
 				for (Entry<String, Dimensions> entry : entrySet) {
 					File outFile = getOutFile(baseOutDir, entry.getKey(), bareFileName);
 					if (configuration.isForceUpdate() || shouldProcess(inFile, outFile, entry.getValue())) {
-						processor.process(inFile, outFile, entry.getValue());
+						processor.process(inFile, outFile, entry.getValue(), configuration.getLogger());
 					} else {
-						System.out.println("skipping " + outFile);
+						configuration.getLogger().info("Skipping " + outFile);
 					}
 				}
 			} catch (Exception e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				configuration.getLogger().error(e.getMessage());
+				configuration.getLogger().verbose(e);
 			}
 
 		}
-		System.out.println("Done !");
+		configuration.getLogger().info("Rezenerator processing done !");
 	}
 
 	private boolean shouldProcess(File inFile, File outFile, Dimensions dims) throws IOException {

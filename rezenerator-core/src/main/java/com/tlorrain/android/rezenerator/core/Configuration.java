@@ -4,12 +4,16 @@ import java.io.File;
 import java.util.LinkedList;
 import java.util.List;
 
+import com.tlorrain.android.rezenerator.core.log.Logger;
+import com.tlorrain.android.rezenerator.core.log.NoopLogger;
+
 public class Configuration {
 	private File inDir;
 	private File baseOutDir;
 	private boolean verbose = true;
 	private boolean forceUpdate = false;
 	private List<String> scannedPackages = new LinkedList<String>();
+	private Logger logger = new NoopLogger();
 
 	public File getInDir() {
 		return inDir;
@@ -53,6 +57,15 @@ public class Configuration {
 
 	public Configuration addScannedPackage(String scannedPackage) {
 		scannedPackages.add(scannedPackage);
+		return this;
+	}
+
+	public Logger getLogger() {
+		return logger;
+	}
+
+	public Configuration setLogger(Logger logger) {
+		this.logger = logger;
 		return this;
 	}
 

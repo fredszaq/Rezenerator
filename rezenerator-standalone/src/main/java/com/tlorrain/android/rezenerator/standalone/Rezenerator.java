@@ -15,7 +15,8 @@ public class Rezenerator {
 
 		configuration.setInDir(new File(args[0]))//
 				.setBaseOutDir(new File(args[1]))//
-				.addScannedPackage("com.tlorrain.android");
+				.addScannedPackage("com.tlorrain.android")//
+				.setLogger(new PrintStreamLogger(System.out, System.err));
 
 		String pakages = System.getProperties().getProperty("rezenerator.scanned.packages");
 		if (pakages != null) {

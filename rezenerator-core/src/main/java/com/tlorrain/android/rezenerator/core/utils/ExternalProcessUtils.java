@@ -5,13 +5,17 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 
+import com.tlorrain.android.rezenerator.core.log.Logger;
+
 public class ExternalProcessUtils {
 	private static class AsyncStreamPrinter extends Thread {
 
 		private final InputStream inputStream;
+		private Printer printer;
 
-		AsyncStreamPrinter(InputStream inputStream) {
+		AsyncStreamPrinter(InputStream inputStream, Printer printer) {
 			this.inputStream = inputStream;
+			this.printer = printer;
 		}
 
 		@Override
@@ -20,7 +24,7 @@ public class ExternalProcessUtils {
 			String line = "";
 			try {
 				while ((line = br.readLine()) != null) {
-					System.out.println(line);
+					printer.print(line);
 				}
 			} catch (IOException e) {
 				e.printStackTrace();
@@ -28,12 +32,44 @@ public class ExternalProcessUtils {
 		}
 	}
 
-	public static int executeProcess(ProcessBuilder pb) {
+	private static interface Printer {
+		void print(String toPrint);
+	}
+
+	private static class ErrorPrinter implements Printer {
+		private Logger logger;
+
+		public ErrorPrinter(Logger logger) {
+			this.logger = logger;
+		}
+
+		@Override
+		public void print(String toPrint) {
+			logger.error(toPrint);
+
+		}
+	}
+
+	private static class StandardPrinter implements Printer {
+		private Logger logger;
+
+		public StandardPrinter(Logger logger) {
+			this.logger = logger;
+		}
+
+		@Override
+		public void print(String toPrint) {
+			logger.info(toPrint);
+
+		}
+	}
+
+	public static int executeProcess(ProcessBuilder pb, Logger logger) {
 		try {
 			Process process = pb.start();
-			AsyncStreamPrinter stardardOutputThread = new AsyncStreamPrinter(process.getInputStream());
+			AsyncStreamPrinter stardardOutputThread = new AsyncStreamPrinter(process.getInputStream(), new StandardPrinter(logger));
 			stardardOutputThread.start();
-			AsyncStreamPrinter errorOutputThread = new AsyncStreamPrinter(process.getErrorStream());
+			AsyncStreamPrinter errorOutputThread = new AsyncStreamPrinter(process.getErrorStream(), new ErrorPrinter(logger));
 			errorOutputThread.start();
 			stardardOutputThread.join();
 			errorOutputThread.join();
@@ -42,5 +78,4 @@ public class ExternalProcessUtils {
 			throw new RuntimeException("error while excecuting " + pb.command(), e);
 		}
 	}
-
 }

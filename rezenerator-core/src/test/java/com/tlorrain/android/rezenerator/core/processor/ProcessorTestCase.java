@@ -9,6 +9,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import com.tlorrain.android.rezenerator.core.Dimensions;
+import com.tlorrain.android.rezenerator.core.log.NoopLogger;
 import com.tlorrain.android.rezenerator.core.utils.PNGFileUtils;
 
 public abstract class ProcessorTestCase {
@@ -28,7 +29,7 @@ public abstract class ProcessorTestCase {
 		String[] split = baseFileName.split("\\.");
 		File outFile = new File(outDir, split[0] + ".png");
 		Dimensions outDims = new Dimensions(512);
-		getProcessorClass().newInstance().process(new File("src/test/resources/processor/" + baseFileName), outFile, outDims);
+		getProcessorClass().newInstance().process(new File("src/test/resources/processor/" + baseFileName), outFile, outDims, new NoopLogger());
 		assertThat(PNGFileUtils.getDimensions(outFile)).isEqualTo(outDims);
 	}
 

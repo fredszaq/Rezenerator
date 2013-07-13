@@ -11,6 +11,7 @@ import org.apache.maven.plugins.annotations.Parameter;
 
 import com.tlorrain.android.rezenerator.core.Configuration;
 import com.tlorrain.android.rezenerator.core.RezeneratorRunner;
+import com.tlorrain.android.rezenerator.core.log.Logger;
 
 /**
  * Goal generating png resources from source (svg...) files
@@ -49,7 +50,8 @@ public class GenerateMojo extends AbstractMojo {
 
 		configuration.setInDir(inputDirectory)//
 				.setBaseOutDir(outputDirectory)//
-				.addScannedPackage("com.tlorrain.android");
+				.addScannedPackage("com.tlorrain.android")//
+				.setLogger(new MavenLogger());
 
 		String pakages = System.getProperties().getProperty("rezenerator.scanned.packages");
 		if (pakages != null) {
@@ -64,6 +66,30 @@ public class GenerateMojo extends AbstractMojo {
 		}
 
 		new RezeneratorRunner().run(configuration);
+
+	}
+
+	private class MavenLogger implements Logger {
+
+		@Override
+		public void info(String info) {
+			GenerateMojo.this.getLog().info(info);
+		}
+
+		@Override
+		public void verbose(String debug) {
+			GenerateMojo.this.getLog().debug(debug);
+		}
+
+		@Override
+		public void verbose(Exception exception) {
+			GenerateMojo.this.getLog().debug(exception);
+		}
+
+		@Override
+		public void error(String error) {
+			GenerateMojo.this.getLog().error(error);
+		}
 
 	}
 }
