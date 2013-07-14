@@ -9,6 +9,7 @@ import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
+import org.apache.maven.project.MavenProject;
 
 import com.tlorrain.android.rezenerator.core.Configuration;
 import com.tlorrain.android.rezenerator.core.RezeneratorRunner;
@@ -25,7 +26,7 @@ public class GenerateMojo extends AbstractMojo {
 	 * Directory containing the source files.
 	 * 
 	 */
-	@Parameter(required = true, defaultValue = "${project.build.resources[0].directory}/drawable")
+	@Parameter(required = true, defaultValue = "${project.basedir}/drawable")
 	private File inputDirectory;
 
 	/**

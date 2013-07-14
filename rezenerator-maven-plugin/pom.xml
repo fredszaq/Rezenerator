@@ -11,21 +11,30 @@
 	<artifactId>rezenerator-maven-plugin</artifactId>
 	<packaging>maven-plugin</packaging>
 	<name>rezenerator-maven-plugin Maven Mojo</name>
+	<properties>
+		<maven.version>3.0.4</maven.version>
+		<maven.annotations.version>3.2</maven.annotations.version>
+	</properties>
 	<dependencies>
 		<dependency>
 			<groupId>org.apache.maven</groupId>
 			<artifactId>maven-plugin-api</artifactId>
-			<version>3.0.5</version>
+			<version>${maven.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.maven.plugin-tools</groupId>
 			<artifactId>maven-plugin-annotations</artifactId>
-			<version>3.2</version>
+			<version>${maven.annotations.version}</version>
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>com.tlorrain.android.rezenerator</groupId>
 			<artifactId>rezenerator-core</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.maven</groupId>
+			<artifactId>maven-core</artifactId>
+			<version>${maven.version}</version>
 		</dependency>
 	</dependencies>
 	<build>
@@ -33,7 +42,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-plugin-plugin</artifactId>
-				<version>3.2</version>
+				<version>${maven.annotations.version}</version>
 				<configuration>
 					<!-- see http://jira.codehaus.org/browse/MNG-5346 -->
 					<skipErrorNoDescriptorsFound>true</skipErrorNoDescriptorsFound>
