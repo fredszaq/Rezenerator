@@ -25,9 +25,13 @@ public class RezeneratorRunnerTest {
 
 	@Test
 	public void basic() throws Exception {
-		rezeneratorRunner.run(config);
+		assertThat(rezeneratorRunner.run(config)).isTrue();
 		checkOutDir(outDir);
+	}
 
+	@Test
+	public void error() throws Exception {
+		assertThat(rezeneratorRunner.run(config.setInDir(new File("src/test/resources/runner-error")))).isFalse();
 	}
 
 	@Test
@@ -48,7 +52,7 @@ public class RezeneratorRunnerTest {
 		Thread.sleep(1000); // time resolution on some files systems is 1s, so
 							// lets wait that to be sure
 
-		rezeneratorRunner.run(config);
+		assertThat(rezeneratorRunner.run(config)).isTrue();
 
 		assertThat(mdpi.lastModified()).isEqualTo(lastModifiedMdpi);
 		assertThat(hdpi.lastModified()).isEqualTo(lastModifiedHdpi);
@@ -75,7 +79,7 @@ public class RezeneratorRunnerTest {
 		Thread.sleep(1000); // time resolution on some files systems is 1s, so
 							// lets wait that to be sure
 
-		rezeneratorRunner.run(config().setForceUpdate(true));
+		assertThat(rezeneratorRunner.run(config().setForceUpdate(true))).isTrue();
 
 		assertThat(mdpi.lastModified()).isGreaterThan(lastModifiedMdpi);
 		assertThat(hdpi.lastModified()).isGreaterThan(lastModifiedHdpi);

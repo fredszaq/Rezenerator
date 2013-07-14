@@ -16,6 +16,7 @@ import org.reflections.Reflections;
 import com.google.common.base.CaseFormat;
 import com.tlorrain.android.rezenerator.core.definition.Definition;
 import com.tlorrain.android.rezenerator.core.definition.DefinitionWrapper;
+import com.tlorrain.android.rezenerator.core.log.Logger;
 import com.tlorrain.android.rezenerator.core.processor.Processor;
 
 public class RezeneratorRunner {
@@ -24,41 +25,59 @@ public class RezeneratorRunner {
 
 	private Map<String, Processor> processors;
 
-	public void run(Configuration configuration) {
+	public boolean run(Configuration configuration) {
+		boolean sucessful = true;
 		final File inDir = configuration.getInDir();
 		final File baseOutDir = configuration.getBaseOutDir();
 		init(configuration.getScannedPackages());
 		if (!inDir.exists() || !inDir.isDirectory()) {
 			throw new IllegalStateException(inDir.getName() + " doesn't exist or is not a directory !");
 		}
+		Logger logger = configuration.getLogger();
 		for (File inFile : inDir.listFiles()) {
-			configuration.getLogger().info("Processing file : " + inFile.getName());
+			logger.info("Processing file : " + inFile.getName());
 			String[] nameSplit = inFile.getName().split("\\.");
 			if (nameSplit.length != 4) {
-				configuration.getLogger().error("Filename must be formated this way : android_id.definition.processor.ext");
+				logger.error("Filename must be formated this way : android_id.definition.processor.ext");
+				sucessful = false;
 				continue;
 			}
 			String bareFileName = nameSplit[0] + ".png";
 			DefinitionWrapper definitionWrapper = definitions.get(nameSplit[1]);
+			if (definitionWrapper == null) {
+				logger.error("Could not find definition " + nameSplit[1]);
+				sucessful = false;
+				continue;
+			}
 			Processor processor = processors.get(nameSplit[2]);
+			if (processor == null) {
+				logger.error("Could not find processor " + nameSplit[2]);
+				sucessful = false;
+				continue;
+			}
 
 			try {
 				Set<Entry<String, Dimensions>> entrySet = definitionWrapper.getConfigurations().entrySet();
 				for (Entry<String, Dimensions> entry : entrySet) {
 					File outFile = getOutFile(baseOutDir, entry.getKey(), bareFileName);
 					if (configuration.isForceUpdate() || shouldProcess(inFile, outFile, entry.getValue())) {
-						processor.process(inFile, outFile, entry.getValue(), configuration.getLogger());
+						sucessful &= processor.process(inFile, outFile, entry.getValue(), logger);
 					} else {
-						configuration.getLogger().info("Skipping " + outFile);
+						logger.info("Skipping " + outFile);
 					}
 				}
 			} catch (Exception e) {
-				configuration.getLogger().error(e.getMessage());
-				configuration.getLogger().verbose(e);
+				logger.error(e.getMessage());
+				logger.verbose(e);
+				sucessful = false;
 			}
 
 		}
-		configuration.getLogger().info("Rezenerator processing done !");
+		logger.info("Rezenerator processing done !");
+		if (!sucessful) {
+			logger.error("There were some errors !");
+		}
+		return sucessful;
 	}
 
 	private boolean shouldProcess(File inFile, File outFile, Dimensions dims) throws IOException {
