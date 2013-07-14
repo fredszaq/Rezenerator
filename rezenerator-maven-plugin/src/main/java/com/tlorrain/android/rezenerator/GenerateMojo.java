@@ -43,7 +43,7 @@ public class GenerateMojo extends AbstractMojo {
 	private File cacheDirectory;
 
 	/**
-	 * Packages to scan.
+	 * Packages to scan for definitions and processors.
 	 */
 	@Parameter
 	private List<String> scannedPackages;
