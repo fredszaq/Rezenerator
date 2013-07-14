@@ -3,6 +3,7 @@ package com.tlorrain.android.rezenerator;
 import static org.apache.maven.plugins.annotations.LifecyclePhase.INITIALIZE;
 
 import java.io.File;
+import java.util.List;
 
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
@@ -41,6 +42,12 @@ public class GenerateMojo extends AbstractMojo {
 	@Parameter(defaultValue = "${project.basedir}/.rezenerator-cache~")
 	private File cacheDirectory;
 
+	/**
+	 * Packages to scan.
+	 */
+	@Parameter
+	private List<String> scannedPackages;
+
 	public void execute() throws MojoExecutionException {
 		getLog().info("input dir : " + inputDirectory);
 		getLog().info("output dir : " + outputDirectory);
@@ -50,15 +57,13 @@ public class GenerateMojo extends AbstractMojo {
 
 		configuration.setInDir(inputDirectory)//
 				.setBaseOutDir(outputDirectory)//
-				.addScannedPackage("com.tlorrain.android")//
+				.addScannedPackage("com.tlorrain.android")// TODO add this by
+															// default in conf
 				.setLogger(new MavenLogger());
 
-		String pakages = System.getProperties().getProperty("rezenerator.scanned.packages");
-		if (pakages != null) {
-			for (String pkg : pakages.split(",")) {
-				configuration.addScannedPackage(pkg);
-			}
-
+		for (String pkg : scannedPackages) {
+			getLog().info("add scanned package: " + pkg);
+			configuration.addScannedPackage(pkg);
 		}
 
 		if (System.getProperties().getProperty("rezenerator.force.update") != null) {
