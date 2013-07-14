@@ -10,7 +10,7 @@ Rezenerator is highly configurable and flexible. The transformations to apply to
 
 *android_id.definition_name.processor_name.ext*
 
-* android_id is the android identifier of the resource, the files generated will have the name android_id.png
+* android_id is the android identifier of the resource, the generated files will have the name *android_id.png*
 * definition_name is the definition to use to process this resource. A `Definition` is an annotated Java file telling to Rezenerator the sizes of the drawables to generate and the folders where to put them. Common definitions (launcher icons, notification icons...) are provided with the tool, and it is easy to create new ones
 * processor_name is the processor to use. A `Processor` is a java class doing the conversion between the input file and the generated one. Rezenerator provides processors for common files format (SVG, PNG, ...) and you can provide yours as well
 * ext is the extention of the source file, nothing new here ! 
@@ -26,7 +26,7 @@ Please note that these processors use external tools that must be installed and 
 ## How to use it ? 
 As this is still a development version, you'll have to compile if, just clone the repository an run a `mvn clean install`. You'll need to have Inkscape and ImageMagick (convert) in you path in order to be able to run the tests. You can skip tests by adding `-DskipTests` to the command line.
 
-After running the command, the standalone jar is available in the `rezenerator/rezenerator-standalone/target/` directory, use `rezenerator-standalone-1.0-SNAPSHOT-jar-with-dependencies.jar` if you don't want to bother with dependencies.
+After running the command, the standalone jar is available in the `rezenerator-standalone/target/` directory, use `rezenerator-standalone-1.0-SNAPSHOT-jar-with-dependencies.jar` if you don't want to bother with dependencies.
 
 The maven plugin in usable once installed, here is an example configuration to use in the pom of your project : 
 
