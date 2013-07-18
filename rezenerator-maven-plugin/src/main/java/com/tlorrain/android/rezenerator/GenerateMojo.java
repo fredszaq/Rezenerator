@@ -9,7 +9,6 @@ import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
-import org.apache.maven.project.MavenProject;
 
 import com.tlorrain.android.rezenerator.core.Configuration;
 import com.tlorrain.android.rezenerator.core.RezeneratorRunner;
@@ -62,9 +61,11 @@ public class GenerateMojo extends AbstractMojo {
 															// default in conf
 				.setLogger(new MavenLogger());
 
-		for (String pkg : scannedPackages) {
-			getLog().info("add scanned package: " + pkg);
-			configuration.addScannedPackage(pkg);
+		if (scannedPackages != null) {
+			for (String pkg : scannedPackages) {
+				getLog().info("add scanned package: " + pkg);
+				configuration.addScannedPackage(pkg);
+			}
 		}
 
 		if (System.getProperties().getProperty("rezenerator.force.update") != null) {
