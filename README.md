@@ -18,7 +18,7 @@ Rezenerator is highly configurable and flexible. The transformations to apply to
 Rezenerator is available as a standalone jar, a maven plugin and soon a gradle plugin.
 
 ## Available processors
-* Inkscape for SVG files (an every other forma inkscape can open)
+* Inkscape for SVG files (an every other format Inkscape can open)
 * ImageMagick for lots of formats (including PNG, PSD, JPG ...)
 
 Please note that these processors use external tools that must be installed and accessible in the path.
@@ -26,9 +26,11 @@ Please note that these processors use external tools that must be installed and 
 ## How to use it ? 
 As this is still a development version, you'll have to compile if, just clone the repository an run a `mvn clean install`. You'll need to have Inkscape and ImageMagick (convert) in you path in order to be able to run the tests. You can skip tests by adding `-DskipTests` to the command line.
 
-After running the command, the standalone jar is available in the `rezenerator-standalone/target/` directory, use `rezenerator-standalone-1.0-SNAPSHOT-jar-with-dependencies.jar` if you don't want to bother with dependencies.
+You have then two options :
 
-The maven plugin in usable once installed, here is an example configuration to use in the pom of your project : 
+You can use the standalone jar available in the `rezenerator-standalone/target/` directory. As you don't want to bother with dependencies, use `rezenerator-standalone-1.0-SNAPSHOT-jar-with-dependencies.jar`. For now, the jar uses system properies for its configuration, just check the source code to see the ones supported !
+
+Or you can use the maven plugin, here is a basic example configuration to use in the pom of your project : 
 
 ```xml
 
@@ -55,6 +57,7 @@ The maven plugin in usable once installed, here is an example configuration to u
   </plugins>
 </build>
 ```      
+For a more complete example, take a look at the `rezenerator-maven-sample` project. The configuration in the sample is more convenient : it will generate the images in the `target` folder, not messing around with the files present inside the `res` folder. It is then easier to use a SCM (you just have to exclude the target folder, you should have already done it) and it allows you to use the `res` folder as an overlay (any file you put in there will still be available to Android and will take precedence over the ones Rezenerator generates). 
 
 The maven plugin works within eclipse with m2e.
 
