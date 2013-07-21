@@ -28,7 +28,7 @@
 			<version>${android.version}</version>
 		</dependency>
 	</dependencies>
-
+	
 	<build>
 		<resources>
 			<resource>
@@ -40,7 +40,6 @@
 				</includes>
 			</resource>
 		</resources>
-
 		<plugins>
 			<plugin>
 				<groupId>com.tlorrain.android.rezenerator</groupId>
@@ -61,6 +60,7 @@
 					<!-- any external dependency containing additional processors/definitions -->
 				</dependencies>
 			</plugin>
+			
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-resources-plugin</artifactId>
@@ -73,8 +73,7 @@
 					</execution>
 				</executions>
 			</plugin>
-
-
+			
 			<plugin>
 				<groupId>com.jayway.maven.plugins.android.generation2</groupId>
 				<artifactId>android-maven-plugin</artifactId>
@@ -87,6 +86,7 @@
 					</sdk>
 				</configuration>
 			</plugin>
+			
 			<plugin>
 				<artifactId>maven-compiler-plugin</artifactId>
 				<version>${maven-compiler-plugin.version}</version>
