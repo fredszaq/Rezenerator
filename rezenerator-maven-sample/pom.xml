@@ -9,6 +9,8 @@
 	<name>rezenerator-maven-sample</name>
 
 	<properties>
+	    <resSrc>${basedir}${file.separator}src${file.separator}main${file.separator}android${file.separator}</resSrc>
+	    
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
 		<!-- Plugins -->
@@ -32,9 +34,9 @@
 	<build>
 		<resources>
 			<resource>
-				<directory>${basedir}${file.separator}res</directory>
+				<directory>${rezSrc}res</directory>
 				<filtering>true</filtering>
-				<targetPath>${project.build.directory}${file.separator}filtered-res</targetPath>
+				<targetPath>${basedir}${file.separator}res</targetPath>
 				<includes>
 					<include>**</include>
 				</includes>
@@ -54,7 +56,7 @@
 				</executions>
 				<configuration>
 					<!-- see the source for available options :D -->
-					<outputDirectory>${project.build.directory}${file.separator}filtered-res</outputDirectory>
+					<inputDirectory>${resSrc}drawable</inputDirectory>
 				</configuration>
 				<dependencies>
 					<!-- any external dependency containing additional processors/definitions -->
@@ -80,7 +82,7 @@
 				<version>${android-maven-plugin.version}</version>
 				<extensions>true</extensions>
 				<configuration>
-					<resourceDirectory>${project.build.directory}${file.separator}filtered-res</resourceDirectory>
+					<resourceDirectory>${basedir}${file.separator}res</resourceDirectory>
 					<sdk>
 						<platform>${api.platform}</platform>
 					</sdk>
