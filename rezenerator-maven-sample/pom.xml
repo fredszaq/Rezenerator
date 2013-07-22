@@ -34,7 +34,7 @@
 	<build>
 		<resources>
 			<resource>
-				<directory>${rezSrc}res</directory>
+				<directory>${resSrc}res</directory>
 				<filtering>true</filtering>
 				<targetPath>${basedir}${file.separator}res</targetPath>
 				<includes>
