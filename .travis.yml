@@ -5,12 +5,10 @@ jdk:
   - openjdk6
 
 before_install:
+ # install inkscape and imagemagick
  - sudo apt-get update -qq
  - sudo apt-get install -qq inkscape imagemagick
- 
-after_script:
-  # install android SDK
- - sudo apt-get update -qq
+ # install android SDK
  - if [ `uname -m` = x86_64 ]; then sudo apt-get install -qq --force-yes libgd2-xpm ia32-libs ia32-libs-multiarch > /dev/null; fi
  - wget http://dl.google.com/android/android-sdk_r21.1-linux.tgz
  - tar xzf android-sdk_r21.1-linux.tgz
@@ -18,8 +16,11 @@ after_script:
  - export PATH=${PATH}:${ANDROID_HOME}/tools:${ANDROID_HOME}/platform-tools
  - android update sdk --filter platform-tools,android-16 --no-ui --force > /dev/null
  
+script:
+ # main build
+ - mvn clean install
  # build the sample project
- - mvn clean install -pl rezenerator-maven-sample
+ - mvn clean install -f rezenerator-maven-sample/pom.xml
 
 
 
