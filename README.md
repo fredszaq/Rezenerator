@@ -18,8 +18,9 @@ Rezenerator is highly configurable and flexible. The transformations to apply to
 Rezenerator is available as a standalone jar, a maven plugin and soon a gradle plugin.
 
 ## Available processors
-* Inkscape for SVG files (an every other format Inkscape can open)
 * ImageMagick for lots of formats (including PNG, PSD, JPG ...)
+* Inkscape for SVG files (an every other format Inkscape can open)
+* InkscapeMagick for same formats as the Inkscape processor, but using a bit of ImageMagick for anti-aliasing
 
 Please note that these processors use external tools that must be installed and accessible in the path.
 
