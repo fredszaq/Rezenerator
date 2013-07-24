@@ -14,7 +14,7 @@ import com.tlorrain.android.rezenerator.core.utils.PNGFileUtils;
 
 public abstract class ProcessorTestCase {
 
-	private File outDir = new File("target/" + this.getClass().getSimpleName() + "-tmp");
+	private File outDir = new File("target/processor-tests/" + this.getClass().getSimpleName());
 
 	@Before
 	public void setup() throws Exception {
