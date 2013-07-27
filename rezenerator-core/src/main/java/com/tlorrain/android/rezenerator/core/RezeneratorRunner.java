@@ -29,7 +29,7 @@ public class RezeneratorRunner {
 		boolean sucessful = true;
 		final File inDir = configuration.getInDir();
 		final File baseOutDir = configuration.getBaseOutDir();
-		init(configuration.getScannedPackages());
+		init(configuration.getScannedPackages(), configuration.getLogger());
 		if (!inDir.exists() || !inDir.isDirectory()) {
 			throw new IllegalStateException(inDir.getName() + " doesn't exist or is not a directory !");
 		}
@@ -88,7 +88,7 @@ public class RezeneratorRunner {
 		return !dims.equals(getDimensions(outFile));
 	}
 
-	private void init(List<String> scannedPackages) {
+	private void init(List<String> scannedPackages, Logger logger) {
 		definitions = new HashMap<String, DefinitionWrapper>();
 		processors = new HashMap<String, Processor>();
 		try {
@@ -97,17 +97,19 @@ public class RezeneratorRunner {
 				for (Class<?> definitionClass : reflections.getTypesAnnotatedWith(Definition.class)) {
 					if (!Modifier.isAbstract(definitionClass.getModifiers())) {
 						definitions.put(converName(definitionClass), new DefinitionWrapper(definitionClass));
+						logger.verbose("loaded definition :" + definitionClass);
 					}
 				}
 				for (Class<?> processorClass : reflections.getSubTypesOf(Processor.class)) {
 					if (!Modifier.isAbstract(processorClass.getModifiers())) {
 						processors.put(converName(processorClass), (Processor) processorClass.newInstance());
+						logger.verbose("loaded processor :" + processorClass);
 					}
 				}
 
 			}
 		} catch (Exception e) {
-			throw new RuntimeException("Could not init Rezenerator", e);
+			throw new RuntimeException("Could not init Rezenerator: " + e + ": " + e.getMessage(), e);
 		}
 
 	}
