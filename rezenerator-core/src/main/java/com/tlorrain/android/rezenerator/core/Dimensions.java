@@ -1,14 +1,17 @@
 package com.tlorrain.android.rezenerator.core;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 public class Dimensions {
 	private final int height, width;
 
-	public Dimensions(int height, int width) {
+	public Dimensions(final int height, final int width) {
 		this.height = height;
 		this.width = width;
 	}
 
-	public Dimensions(int squareSize) {
+	public Dimensions(final int squareSize) {
 		this(squareSize, squareSize);
 	}
 
@@ -46,18 +49,23 @@ public class Dimensions {
 	}
 
 	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
+	public boolean equals(final Object obj) {
+		if (this == obj) {
 			return true;
-		if (obj == null)
+		}
+		if (obj == null) {
 			return false;
-		if (getClass() != obj.getClass())
+		}
+		if (getClass() != obj.getClass()) {
 			return false;
-		Dimensions other = (Dimensions) obj;
-		if (height != other.height)
+		}
+		final Dimensions other = (Dimensions) obj;
+		if (height != other.height) {
 			return false;
-		if (width != other.width)
+		}
+		if (width != other.width) {
 			return false;
+		}
 		return true;
 	}
 
@@ -66,4 +74,17 @@ public class Dimensions {
 		return "Dimensions [height=" + height + ", width=" + width + "]";
 	}
 
+	private static final Pattern PATTERN_SIMPLE = Pattern.compile("\\d+");
+	private static final Pattern PATTERN_X = Pattern.compile("(\\d+)[xX](\\d+)");
+
+	public static Dimensions fromString(final String string) {
+		if (string.matches(PATTERN_SIMPLE.pattern())) {
+			return new Dimensions(Integer.parseInt(string));
+		} else if (string.matches(PATTERN_X.pattern())) {
+			final Matcher matcher = PATTERN_X.matcher(string);
+			matcher.find();
+			return new Dimensions(Integer.parseInt(matcher.group(1)), Integer.parseInt(matcher.group(2)));
+		}
+		throw new IllegalArgumentException(string);
+	}
 }

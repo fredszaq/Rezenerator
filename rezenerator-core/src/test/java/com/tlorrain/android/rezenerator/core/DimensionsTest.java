@@ -26,4 +26,24 @@ public class DimensionsTest {
 		assertThat(new Dimensions(2, 4).scaleToHeight(10)).isEqualTo(new Dimensions(10, 20));
 	}
 
+	@Test
+	public void fromString_square() {
+		assertThat(Dimensions.fromString("50")).isEqualTo(new Dimensions(50));
+	}
+
+	@Test
+	public void fromString_usex() {
+		assertThat(Dimensions.fromString("50x60")).isEqualTo(new Dimensions(50, 60));
+	}
+
+	@Test
+	public void fromString_useX() {
+		assertThat(Dimensions.fromString("50X60")).isEqualTo(new Dimensions(50, 60));
+	}
+
+	@Test(expected = IllegalArgumentException.class)
+	public void fromString_illegal() {
+		Dimensions.fromString("toto");
+	}
+
 }
