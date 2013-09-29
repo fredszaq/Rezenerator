@@ -45,7 +45,11 @@ public class DefinitionReader {
 	 *         property
 	 */
 	private Dimensions computeVal(final String propName) {
-		return Dimensions.fromString(properties.getProperty(propName));
+		final String property = properties.getProperty(propName);
+		if (property == null) {
+			throw new IllegalArgumentException("Could not find property " + propName);
+		}
+		return Dimensions.fromString(property);
 	}
 
 	private static final String ID_REG = "[a-zA-Z][a-zA-Z\\-\\d]+";
@@ -69,7 +73,13 @@ public class DefinitionReader {
 		final Matcher multiMethodCallMatcher = CALLS.matcher(property);
 		if (multiMethodCallMatcher.matches()) {
 			final String[] methodsLiterals = property.split(CALL_REG);
-			Dimensions result = computeVal(PREFIX_VAL + multiMethodCallMatcher.group(1));
+			final String dependancyName = multiMethodCallMatcher.group(1);
+			Dimensions result = null;
+			if (properties.containsKey(PREFIX_DEF + dependancyName)) {
+				result = computeDef(PREFIX_DEF + dependancyName);
+			} else {
+				result = computeVal(PREFIX_VAL + dependancyName);
+			}
 			for (int i = 1; i < methodsLiterals.length; i++) {
 				try {
 					final Matcher methodCallMatcher = METHOD.matcher(methodsLiterals[i]);
