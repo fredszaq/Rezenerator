@@ -13,8 +13,8 @@ import com.tlorrain.android.rezenerator.core.Dimensions;
 public class DefinitionReaderTest {
 
 	@Test
-	public void simple() throws FileNotFoundException, IOException {
-		final DefinitionReader definitionReader = new DefinitionReader("/definition/simple_definition.properties");
+	public void val() throws FileNotFoundException, IOException {
+		final DefinitionReader definitionReader = new DefinitionReader("/definition/val.properties");
 		final Map<String, Dimensions> configurations = definitionReader.getConfigurations();
 		assertThat(configurations).hasSize(2);
 		System.out.println(configurations);
@@ -24,13 +24,25 @@ public class DefinitionReaderTest {
 	}
 
 	@Test
-	public void standard() throws FileNotFoundException, IOException {
-		final DefinitionReader definitionReader = new DefinitionReader("/definition/standard_definition.properties");
+	public void def_simple() throws FileNotFoundException, IOException {
+		final DefinitionReader definitionReader = new DefinitionReader("/definition/def_simple.properties");
 		final Map<String, Dimensions> configurations = definitionReader.getConfigurations();
 		assertThat(configurations).hasSize(2);
 		System.out.println(configurations);
 		assertThat(configurations.get("mdpi")).isEqualTo(new Dimensions(48));
-		assertThat(configurations.get("xhdpi")).isEqualTo(new Dimensions(96, 96));
+		assertThat(configurations.get("xhdpi")).isEqualTo(new Dimensions(96));
+
+	}
+
+	@Test
+	public void def_multiple() throws FileNotFoundException, IOException {
+		final DefinitionReader definitionReader = new DefinitionReader("/definition/def_multiple.properties");
+		final Map<String, Dimensions> configurations = definitionReader.getConfigurations();
+		assertThat(configurations).hasSize(3);
+		System.out.println(configurations);
+		assertThat(configurations.get("mdpi")).isEqualTo(new Dimensions(48));
+		assertThat(configurations.get("hdpi")).isEqualTo(new Dimensions(72));
+		assertThat(configurations.get("xhdpi")).isEqualTo(new Dimensions(96));
 
 	}
 
