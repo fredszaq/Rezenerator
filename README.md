@@ -11,15 +11,31 @@ Rezenerator is highly configurable and flexible. The transformations to apply to
 *android_id.definition_name.processor_name.ext*
 
 * *android_id* is the android identifier of the resource, the generated files will have the name *android_id.png*
-* *definition_name* is the definition to use to process this resource. A `Definition` is an annotated Java file telling to Rezenerator the sizes of the drawables to generate and the folders where to put them. Common definitions (launcher icons, notification icons...) are provided with the tool, and it is easy to create new ones
+* *definition_name* is the definition to use to process this resource. A definition is a properties file telling to Rezenerator the sizes of the drawables to generate and the folders where to put them. Common definitions (launcher icons, notification icons...) are provided with the tool, and it is easy to create new ones
 * *processor_name* is the processor to use. A `Processor` is a java class doing the conversion between the input file and the generated one. Rezenerator provides processors for common files format (SVG, PNG, ...) and you can provide yours as well
 * *ext* is the extention of the source file, nothing new here ! 
 
 Rezenerator is available as a standalone jar, a maven plugin and soon a gradle plugin.
 
+## Definition syntax 
+A definition is a properties file, here is an example : 
+
+```properties
+# get everything that was defined in base_drawable.properties
+# base_drawable defines hdpi, xhdpi and xxhdpi images sizes in terms of the mdpi one
+rezenerator.extends  = base_drawable
+
+# the mdpi image is  42px x 24px  (height x width)
+rezenerator.val.mdpi = 42x24
+
+# ldpi image has the size of the hdpi one divided by two. 
+rezenerator.def.ldpi = hdpi.divide(2) 
+```
+
+
 ## Available processors
 * ImageMagick for lots of formats (including PNG, PSD, JPG ...)
-* Inkscape for SVG files (an every other format Inkscape can open)
+* Inkscape for SVG files (and every other format Inkscape can open)
 * InkscapeMagick for same formats as the Inkscape processor, but using a bit of ImageMagick for anti-aliasing
 
 Please note that these processors use external tools that must be installed and accessible in the path.
