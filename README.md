@@ -41,7 +41,7 @@ rezenerator.def.ldpi = hdpi.divide(2)
 Please note that these processors use external tools that must be installed and accessible in the path.
 
 ## How to use it ? 
-As this is still a development version, you'll have to compile if, just clone the repository an run a `mvn clean install`. You'll need to have Inkscape and ImageMagick (convert) in you path in order to be able to run the tests. You can skip tests by adding `-DskipTests` to the command line.
+As this is still a development version, you'll have to compile it, just clone the repository and run a `mvn clean install`. You'll need to have Inkscape and ImageMagick (convert) in you path in order to be able to run the tests. You can skip tests by adding `-DskipTests` to the command line.
 
 You have then two options :
 
