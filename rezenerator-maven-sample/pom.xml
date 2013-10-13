@@ -54,6 +54,9 @@
 					<include>**</include>
 				</includes>
 			</resource>
+			<resource>
+				<directory>${resDir}</directory>
+			</resource>
 		</resources>
 		<plugins>
 			<plugin>
@@ -82,6 +85,9 @@
 				<configuration>
 					<!-- see the source for available options :D -->
 					<inputDirectory>${resSrc}drawable</inputDirectory>
+					<definitionDirs>
+					    <definitionDir>${resSrc}definitions</definitionDir>
+					</definitionDirs>
 				</configuration>
 				<dependencies>
 					<!-- any external dependency containing additional processors/definitions -->

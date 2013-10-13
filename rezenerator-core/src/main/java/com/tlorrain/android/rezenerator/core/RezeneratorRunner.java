@@ -14,14 +14,12 @@ import java.util.Set;
 import org.reflections.Reflections;
 
 import com.google.common.base.CaseFormat;
-import com.tlorrain.android.rezenerator.core.definition.Definition;
-import com.tlorrain.android.rezenerator.core.definition.DefinitionWrapper;
+import com.tlorrain.android.rezenerator.core.definition.DefinitionFinder;
+import com.tlorrain.android.rezenerator.core.definition.DefinitionReader;
 import com.tlorrain.android.rezenerator.core.log.Logger;
 import com.tlorrain.android.rezenerator.core.processor.Processor;
 
 public class RezeneratorRunner {
-
-	private Map<String, DefinitionWrapper> definitions;
 
 	private Map<String, Processor> processors;
 
@@ -29,6 +27,7 @@ public class RezeneratorRunner {
 		boolean sucessful = true;
 		final File inDir = configuration.getInDir();
 		final File baseOutDir = configuration.getBaseOutDir();
+		final DefinitionFinder finder = new DefinitionFinder(configuration.getDefinitionDirs());
 		init(configuration.getScannedPackages(), configuration.getLogger());
 		if (!inDir.exists() || !inDir.isDirectory()) {
 			throw new IllegalStateException(inDir.getName() + " doesn't exist or is not a directory !");
@@ -43,9 +42,12 @@ public class RezeneratorRunner {
 				continue;
 			}
 			String bareFileName = nameSplit[0] + ".png";
-			DefinitionWrapper definitionWrapper = definitions.get(nameSplit[1]);
-			if (definitionWrapper == null) {
-				logger.error("Could not find definition " + nameSplit[1]);
+			DefinitionReader definitionReader;
+			try {
+				definitionReader = new DefinitionReader(finder.find(nameSplit[1]));
+			} catch (Exception e1) {
+				logger.error("could not load definition " + nameSplit[1]);
+				logger.verbose(e1);
 				sucessful = false;
 				continue;
 			}
@@ -57,7 +59,7 @@ public class RezeneratorRunner {
 			}
 
 			try {
-				Set<Entry<String, Dimensions>> entrySet = definitionWrapper.getConfigurations().entrySet();
+				Set<Entry<String, Dimensions>> entrySet = definitionReader.getConfigurations().entrySet();
 				for (Entry<String, Dimensions> entry : entrySet) {
 					File outFile = getOutFile(baseOutDir, entry.getKey(), bareFileName);
 					if (configuration.isForceUpdate() || shouldProcess(inFile, outFile, entry.getValue())) {
@@ -89,17 +91,10 @@ public class RezeneratorRunner {
 	}
 
 	private void init(List<String> scannedPackages, Logger logger) {
-		definitions = new HashMap<String, DefinitionWrapper>();
 		processors = new HashMap<String, Processor>();
 		try {
 			for (String packageName : scannedPackages) {
 				Reflections reflections = new Reflections(packageName);
-				for (Class<?> definitionClass : reflections.getTypesAnnotatedWith(Definition.class)) {
-					if (!Modifier.isAbstract(definitionClass.getModifiers())) {
-						definitions.put(converName(definitionClass), new DefinitionWrapper(definitionClass));
-						logger.verbose("loaded definition :" + definitionClass);
-					}
-				}
 				for (Class<?> processorClass : reflections.getSubTypesOf(Processor.class)) {
 					if (!Modifier.isAbstract(processorClass.getModifiers())) {
 						processors.put(converName(processorClass), (Processor) processorClass.newInstance());

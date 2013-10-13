@@ -43,10 +43,13 @@ public class GenerateMojo extends AbstractMojo {
 	private File cacheDirectory;
 
 	/**
-	 * Packages to scan for definitions and processors.
+	 * Packages to scan for extra processors.
 	 */
 	@Parameter
 	private List<String> scannedPackages;
+
+	@Parameter
+	private List<File> definitionDirs;
 
 	public void execute() throws MojoExecutionException {
 		getLog().info("input dir : " + inputDirectory);
@@ -66,6 +69,14 @@ public class GenerateMojo extends AbstractMojo {
 				getLog().info("add scanned package: " + pkg);
 				configuration.addScannedPackage(pkg);
 			}
+		}
+
+		if (definitionDirs != null) {
+			for (File dir : definitionDirs) {
+				configuration.addDefinitionDir(dir);
+			}
+		} else {
+			configuration.addDefinitionDir(new File("definitions"));
 		}
 
 		if (System.getProperties().getProperty("rezenerator.force.update") != null) {

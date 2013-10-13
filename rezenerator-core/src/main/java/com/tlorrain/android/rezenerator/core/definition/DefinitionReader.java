@@ -12,11 +12,10 @@ import java.util.regex.Pattern;
 import com.tlorrain.android.rezenerator.core.Dimensions;
 
 public class DefinitionReader {
+	private final Properties definition;
 
-	private final Properties properties = new Properties();
-
-	public DefinitionReader(final String fileName) throws FileNotFoundException, IOException {
-		properties.load(this.getClass().getResourceAsStream(fileName));
+	public DefinitionReader(Properties definition) throws FileNotFoundException, IOException {
+		this.definition = definition;
 	}
 
 	public static final String PREFIX_VAL = "rezenerator.val.";
@@ -24,7 +23,7 @@ public class DefinitionReader {
 
 	public Map<String, Dimensions> getConfigurations() {
 		final Map<String, Dimensions> result = new HashMap<String, Dimensions>();
-		for (final String prop : properties.stringPropertyNames()) {
+		for (final String prop : definition.stringPropertyNames()) {
 			if (prop.startsWith(PREFIX_VAL)) {
 				result.put(prop.substring(PREFIX_VAL.length()), computeVal(prop));
 			} else if (prop.startsWith(PREFIX_DEF)) {
@@ -45,7 +44,7 @@ public class DefinitionReader {
 	 *         property
 	 */
 	private Dimensions computeVal(final String propName) {
-		final String property = properties.getProperty(propName);
+		final String property = definition.getProperty(propName);
 		if (property == null) {
 			throw new IllegalArgumentException("Could not find property " + propName);
 		}
@@ -69,13 +68,13 @@ public class DefinitionReader {
 	 *         val
 	 */
 	private Dimensions computeDef(final String propName) {
-		final String property = properties.getProperty(propName);
+		final String property = definition.getProperty(propName);
 		final Matcher multiMethodCallMatcher = CALLS.matcher(property);
 		if (multiMethodCallMatcher.matches()) {
 			final String[] methodsLiterals = property.split(CALL_REG);
 			final String dependancyName = multiMethodCallMatcher.group(1);
 			Dimensions result = null;
-			if (properties.containsKey(PREFIX_DEF + dependancyName)) {
+			if (definition.containsKey(PREFIX_DEF + dependancyName)) {
 				result = computeDef(PREFIX_DEF + dependancyName);
 			} else {
 				result = computeVal(PREFIX_VAL + dependancyName);
