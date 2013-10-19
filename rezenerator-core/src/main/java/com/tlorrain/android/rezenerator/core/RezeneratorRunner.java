@@ -23,66 +23,68 @@ public class RezeneratorRunner {
 
 	private Map<String, Processor> processors;
 
-	public boolean run(Configuration configuration) {
-		boolean sucessful = true;
+	public RunResult run(final Configuration configuration) {
+		final Logger logger = configuration.getLogger();
+		final RunResult result = new RunResult();
 		final File inDir = configuration.getInDir();
 		final File baseOutDir = configuration.getBaseOutDir();
 		final DefinitionFinder finder = new DefinitionFinder(configuration.getDefinitionDirs());
-		init(configuration.getScannedPackages(), configuration.getLogger());
+		loadProcessors(configuration.getScannedPackages(), configuration.getLogger());
 		if (!inDir.exists() || !inDir.isDirectory()) {
 			throw new IllegalStateException(inDir.getName() + " doesn't exist or is not a directory !");
 		}
-		Logger logger = configuration.getLogger();
-		for (File inFile : inDir.listFiles()) {
+		boolean successful = true;
+		for (final File inFile : inDir.listFiles()) {
 			logger.info("Processing file : " + inFile.getName());
-			String[] nameSplit = inFile.getName().split("\\.");
-			if (nameSplit.length != 4) {
-				logger.error("Filename must be formated this way : android_id.definition.processor.ext");
-				sucessful = false;
-				continue;
-			}
-			String bareFileName = nameSplit[0] + ".png";
-			DefinitionReader definitionReader;
 			try {
-				definitionReader = new DefinitionReader(finder.find(nameSplit[1]));
-			} catch (Exception e1) {
-				logger.error("could not load definition " + nameSplit[1]);
-				logger.verbose(e1);
-				sucessful = false;
-				continue;
-			}
-			Processor processor = processors.get(nameSplit[2]);
-			if (processor == null) {
-				logger.error("Could not find processor " + nameSplit[2]);
-				sucessful = false;
-				continue;
-			}
+				final String[] nameSplit = splitFileName(inFile);
+				final String outFileName = nameSplit[0] + ".png";
+				final DefinitionReader definitionReader = new DefinitionReader(finder.find(nameSplit[1]));
+				final Processor processor = getProcessor(nameSplit[2]);
 
-			try {
-				Set<Entry<String, Dimensions>> entrySet = definitionReader.getConfigurations().entrySet();
-				for (Entry<String, Dimensions> entry : entrySet) {
-					File outFile = getOutFile(baseOutDir, entry.getKey(), bareFileName);
+				final Set<Entry<String, Dimensions>> entrySet = definitionReader.getConfigurations().entrySet();
+				for (final Entry<String, Dimensions> entry : entrySet) {
+					final File outFile = getOutFile(baseOutDir, entry.getKey(), outFileName);
 					if (configuration.isForceUpdate() || shouldProcess(inFile, outFile, entry.getValue())) {
-						sucessful &= processor.process(inFile, outFile, entry.getValue(), logger);
+						successful &= processor.process(inFile, outFile, entry.getValue(), logger);
 					} else {
 						logger.info("Skipping " + outFile);
 					}
 				}
-			} catch (Exception e) {
+			} catch (final Exception e) {
 				logger.error(e.getMessage());
 				logger.verbose(e);
-				sucessful = false;
+				result.addError(inFile, e);
+				successful = false;
 			}
 
 		}
 		logger.info("Rezenerator processing done !");
-		if (!sucessful) {
+		if (!successful) {
 			logger.error("There were some errors !");
 		}
-		return sucessful;
+		result.setSuccessful(successful);
+		return result;
 	}
 
-	private boolean shouldProcess(File inFile, File outFile, Dimensions dims) throws IOException {
+	private Processor getProcessor(final String processorName) {
+		final Processor processor = processors.get(processorName);
+		if (processor == null) {
+			throw new IllegalArgumentException("Could not find processor " + processorName);
+		}
+		return processor;
+	}
+
+	private String[] splitFileName(final File inFile) {
+		final String[] nameSplit = inFile.getName().split("\\.");
+		if (nameSplit.length != 4) {
+			throw new IllegalArgumentException("Filename must be formated this way : android_id.definition.processor.ext");
+
+		}
+		return nameSplit;
+	}
+
+	private boolean shouldProcess(final File inFile, final File outFile, final Dimensions dims) throws IOException {
 		if (!(outFile.exists() && outFile.lastModified() > inFile.lastModified())) {
 			return true;
 		}
@@ -90,12 +92,12 @@ public class RezeneratorRunner {
 		return !dims.equals(getDimensions(outFile));
 	}
 
-	private void init(List<String> scannedPackages, Logger logger) {
+	private void loadProcessors(final List<String> scannedPackages, final Logger logger) {
 		processors = new HashMap<String, Processor>();
 		try {
-			for (String packageName : scannedPackages) {
-				Reflections reflections = new Reflections(packageName);
-				for (Class<?> processorClass : reflections.getSubTypesOf(Processor.class)) {
+			for (final String packageName : scannedPackages) {
+				final Reflections reflections = new Reflections(packageName);
+				for (final Class<?> processorClass : reflections.getSubTypesOf(Processor.class)) {
 					if (!Modifier.isAbstract(processorClass.getModifiers())) {
 						processors.put(converName(processorClass), (Processor) processorClass.newInstance());
 						logger.verbose("loaded processor :" + processorClass);
@@ -103,18 +105,18 @@ public class RezeneratorRunner {
 				}
 
 			}
-		} catch (Exception e) {
+		} catch (final Exception e) {
 			throw new RuntimeException("Could not init Rezenerator: " + e + ": " + e.getMessage(), e);
 		}
 
 	}
 
-	private String converName(Class<?> clazz) {
+	private String converName(final Class<?> clazz) {
 		return CaseFormat.UPPER_CAMEL.to(CaseFormat.LOWER_UNDERSCORE, clazz.getSimpleName());
 	}
 
-	private File getOutFile(File baseOutDir, String qualifier, String bareFileName) {
-		File outDir = new File(baseOutDir, "drawable-" + qualifier);
+	private File getOutFile(final File baseOutDir, final String qualifier, final String bareFileName) {
+		final File outDir = new File(baseOutDir, "drawable-" + qualifier);
 		if (!outDir.exists()) {
 			outDir.mkdirs();
 		}

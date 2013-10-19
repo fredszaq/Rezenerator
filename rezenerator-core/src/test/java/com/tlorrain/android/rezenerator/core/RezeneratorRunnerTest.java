@@ -25,18 +25,18 @@ public class RezeneratorRunnerTest {
 
 	@Test
 	public void basic() throws Exception {
-		assertThat(rezeneratorRunner.run(config)).isTrue();
+		assertThat(rezeneratorRunner.run(config).isSuccessful()).isTrue();
 		checkOutDir(outDir);
 	}
 
 	@Test
 	public void error() throws Exception {
-		assertThat(rezeneratorRunner.run(config.setInDir(new File("src/test/resources/runner-error")))).isFalse();
+		assertThat(rezeneratorRunner.run(config.setInDir(new File("src/test/resources/runner-error"))).isSuccessful()).isFalse();
 	}
 
 	@Test
 	public void existingFiles() throws Exception {
-		rezeneratorRunner.run(config);
+		rezeneratorRunner.run(config).isSuccessful();
 		checkOutDir(outDir);
 		File mdpi = getOutFile(outDir, "mdpi");
 		File hdpi = getOutFile(outDir, "hdpi");
@@ -52,7 +52,7 @@ public class RezeneratorRunnerTest {
 		Thread.sleep(1000); // time resolution on some files systems is 1s, so
 							// lets wait that to be sure
 
-		assertThat(rezeneratorRunner.run(config)).isTrue();
+		assertThat(rezeneratorRunner.run(config).isSuccessful()).isTrue();
 
 		assertThat(mdpi.lastModified()).isEqualTo(lastModifiedMdpi);
 		assertThat(hdpi.lastModified()).isEqualTo(lastModifiedHdpi);
@@ -64,7 +64,7 @@ public class RezeneratorRunnerTest {
 
 	@Test
 	public void forceUpdate() throws Exception {
-		rezeneratorRunner.run(config);
+		rezeneratorRunner.run(config).isSuccessful();
 		checkOutDir(outDir);
 		File mdpi = getOutFile(outDir, "mdpi");
 		File hdpi = getOutFile(outDir, "hdpi");
@@ -79,7 +79,7 @@ public class RezeneratorRunnerTest {
 		Thread.sleep(1000); // time resolution on some files systems is 1s, so
 							// lets wait that to be sure
 
-		assertThat(rezeneratorRunner.run(config().setForceUpdate(true))).isTrue();
+		assertThat(rezeneratorRunner.run(config().setForceUpdate(true)).isSuccessful()).isTrue();
 
 		assertThat(mdpi.lastModified()).isGreaterThan(lastModifiedMdpi);
 		assertThat(hdpi.lastModified()).isGreaterThan(lastModifiedHdpi);

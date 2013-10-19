@@ -30,6 +30,6 @@ public class Rezenerator {
 			configuration.setForceUpdate(true);
 		}
 
-		new RezeneratorRunner().run(configuration);
+		new RezeneratorRunner().run(configuration).isSuccessful();
 	}
 }

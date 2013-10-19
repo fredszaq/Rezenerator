@@ -83,7 +83,7 @@ public class GenerateMojo extends AbstractMojo {
 			configuration.setForceUpdate(true);
 		}
 
-		new RezeneratorRunner().run(configuration);
+		new RezeneratorRunner().run(configuration).isSuccessful();
 
 	}
 
