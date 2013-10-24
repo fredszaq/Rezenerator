@@ -80,7 +80,7 @@ By default, Rezenerator will process files in the `drawable` folder and output t
       
 For a more complete example, take a look at the `rezenerator-maven-sample` project. The configuration in the sample is more convenient: it will take over completely the management of the `res` folder (we use the `res` folder and not one in the `target` folder because otherwise the project cannot be imported in Eclipse). Files processed by Rezenerator are then located in the `src/main/android/drawable` directory. Every other files that should normally be placed in the `res` folder are in `src/main/android/res`. It is then easier to use a SCM (you just have to exclude the `res` folder) and you can use the `src/main/android/res` folder as an overlay (any file you put in there will still be available to Android and will take precedence over the ones Rezenerator generates). Note that `src/main/android/res` is processed by the `maven-resource-plugin` and you can use filtering on it !
 
-The maven plugin works in Eclipse with m2e.
+The maven plugin works in Eclipse with m2e, you may have to run `mvn clean compile` in the command line before the first import of an image ;)
 
 ## Note
 
