@@ -4,14 +4,17 @@ import static org.apache.maven.plugins.annotations.LifecyclePhase.INITIALIZE;
 
 import java.io.File;
 import java.util.List;
+import java.util.Map.Entry;
 
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
+import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
 
 import com.tlorrain.android.rezenerator.core.Configuration;
 import com.tlorrain.android.rezenerator.core.RezeneratorRunner;
+import com.tlorrain.android.rezenerator.core.RunResult;
 import com.tlorrain.android.rezenerator.core.log.Logger;
 
 /**
@@ -51,12 +54,13 @@ public class GenerateMojo extends AbstractMojo {
 	@Parameter
 	private List<File> definitionDirs;
 
-	public void execute() throws MojoExecutionException {
+	@Override
+	public void execute() throws MojoExecutionException, MojoFailureException {
 		getLog().info("input dir : " + inputDirectory);
 		getLog().info("output dir : " + outputDirectory);
 		getLog().info("cache dir : " + cacheDirectory);
 
-		Configuration configuration = new Configuration();
+		final Configuration configuration = new Configuration();
 
 		configuration.setInDir(inputDirectory)//
 				.setBaseOutDir(outputDirectory)//
@@ -65,14 +69,14 @@ public class GenerateMojo extends AbstractMojo {
 				.setLogger(new MavenLogger());
 
 		if (scannedPackages != null) {
-			for (String pkg : scannedPackages) {
+			for (final String pkg : scannedPackages) {
 				getLog().info("add scanned package: " + pkg);
 				configuration.addScannedPackage(pkg);
 			}
 		}
 
 		if (definitionDirs != null) {
-			for (File dir : definitionDirs) {
+			for (final File dir : definitionDirs) {
 				configuration.addDefinitionDir(dir);
 			}
 		} else {
@@ -83,30 +87,42 @@ public class GenerateMojo extends AbstractMojo {
 			configuration.setForceUpdate(true);
 		}
 
-		new RezeneratorRunner().run(configuration).isSuccessful();
+		final RunResult runResult = new RezeneratorRunner().run(configuration);
+		if (!runResult.isSuccessful()) {
+			if (runResult.getErrors().size() > 0) {
+				final Entry<File, Exception> firstError = runResult.getErrors().entrySet().iterator().next();
+				throw new MojoFailureException("Rezenerator reported " + runResult.getErrors().size()
+						+ " errors, first one was on " + firstError.getKey() + " : "
+						+ firstError.getValue().getMessage(), firstError.getValue());
+			} else {
+				// TODO make sure we never go, there :D
+				throw new MojoFailureException("Rezenerator execution failed, no further details were provided");
+			}
+
+		}
 
 	}
 
 	private class MavenLogger implements Logger {
 
 		@Override
-		public void info(String info) {
-			GenerateMojo.this.getLog().info(info);
+		public void info(final String info) {
+			getLog().info(info);
 		}
 
 		@Override
-		public void verbose(String debug) {
-			GenerateMojo.this.getLog().debug(debug);
+		public void verbose(final String debug) {
+			getLog().debug(debug);
 		}
 
 		@Override
-		public void verbose(Exception exception) {
-			GenerateMojo.this.getLog().debug(exception);
+		public void verbose(final Exception exception) {
+			getLog().debug(exception);
 		}
 
 		@Override
-		public void error(String error) {
-			GenerateMojo.this.getLog().error(error);
+		public void error(final String error) {
+			getLog().error(error);
 		}
 
 	}
