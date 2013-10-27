@@ -26,4 +26,9 @@ public class RunResult {
 		errors.put(on, exception);
 	}
 
+	@Override
+	public String toString() {
+		return "RunResult [errors=" + errors + ", successful=" + successful + "]";
+	}
+
 }

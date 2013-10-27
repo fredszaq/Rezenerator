@@ -4,6 +4,7 @@ import java.io.File;
 
 import com.tlorrain.android.rezenerator.core.Configuration;
 import com.tlorrain.android.rezenerator.core.RezeneratorRunner;
+import com.tlorrain.android.rezenerator.core.RunResult;
 
 public class Rezenerator {
 	public static void main(final String[] args) {
@@ -37,6 +38,7 @@ public class Rezenerator {
 			configuration.setForceUpdate(true);
 		}
 
-		new RezeneratorRunner().run(configuration).isSuccessful();
+		final RunResult runResult = new RezeneratorRunner().run(configuration);
+		System.out.println(runResult);
 	}
 }
