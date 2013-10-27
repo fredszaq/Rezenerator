@@ -21,7 +21,8 @@ import com.tlorrain.android.rezenerator.core.processor.Processor;
 
 public class RezeneratorRunner {
 
-	private Map<String, Processor> processors;
+	private static final String DRAWABLE_PREFIX = "drawable-";
+	private static final String PNG_EXT = ".png";
 
 	public RunResult run(final Configuration configuration) {
 		final Logger logger = configuration.getLogger();
@@ -29,18 +30,19 @@ public class RezeneratorRunner {
 		final File inDir = configuration.getInDir();
 		final File baseOutDir = configuration.getBaseOutDir();
 		final DefinitionFinder finder = new DefinitionFinder(configuration.getDefinitionDirs());
-		loadProcessors(configuration.getScannedPackages(), configuration.getLogger());
+		final Map<String, Processor> processors = loadProcessors(configuration.getScannedPackages(),
+				configuration.getLogger());
 		if (!inDir.exists() || !inDir.isDirectory()) {
 			throw new IllegalStateException(inDir.getName() + " doesn't exist or is not a directory !");
 		}
 		boolean successful = true;
 		for (final File inFile : inDir.listFiles()) {
-			logger.info("Processing file : " + inFile.getName());
+			logger.info("Processing file: " + inFile.getName());
 			try {
 				final String[] nameSplit = splitFileName(inFile);
-				final String outFileName = nameSplit[0] + ".png";
+				final String outFileName = nameSplit[0] + PNG_EXT;
 				final DefinitionReader definitionReader = new DefinitionReader(finder.find(nameSplit[1]));
-				final Processor processor = getProcessor(nameSplit[2]);
+				final Processor processor = getProcessor(processors, nameSplit[2]);
 
 				final Set<Entry<String, Dimensions>> entrySet = definitionReader.getConfigurations().entrySet();
 				for (final Entry<String, Dimensions> entry : entrySet) {
@@ -67,7 +69,7 @@ public class RezeneratorRunner {
 		return result;
 	}
 
-	private Processor getProcessor(final String processorName) {
+	private Processor getProcessor(final Map<String, Processor> processors, final String processorName) {
 		final Processor processor = processors.get(processorName);
 		if (processor == null) {
 			throw new IllegalArgumentException("Could not find processor " + processorName);
@@ -78,7 +80,8 @@ public class RezeneratorRunner {
 	private String[] splitFileName(final File inFile) {
 		final String[] nameSplit = inFile.getName().split("\\.");
 		if (nameSplit.length != 4) {
-			throw new IllegalArgumentException("Filename must be formated this way : android_id.definition.processor.ext");
+			throw new IllegalArgumentException(
+					"Filename must be formated this way : android_id.definition.processor.ext");
 
 		}
 		return nameSplit;
@@ -92,15 +95,15 @@ public class RezeneratorRunner {
 		return !dims.equals(getDimensions(outFile));
 	}
 
-	private void loadProcessors(final List<String> scannedPackages, final Logger logger) {
-		processors = new HashMap<String, Processor>();
+	private Map<String, Processor> loadProcessors(final List<String> scannedPackages, final Logger logger) {
+		final Map<String, Processor> processors = new HashMap<String, Processor>();
 		try {
 			for (final String packageName : scannedPackages) {
 				final Reflections reflections = new Reflections(packageName);
 				for (final Class<?> processorClass : reflections.getSubTypesOf(Processor.class)) {
 					if (!Modifier.isAbstract(processorClass.getModifiers())) {
 						processors.put(converName(processorClass), (Processor) processorClass.newInstance());
-						logger.verbose("loaded processor :" + processorClass);
+						logger.verbose("loaded processor: " + processorClass);
 					}
 				}
 
@@ -108,6 +111,7 @@ public class RezeneratorRunner {
 		} catch (final Exception e) {
 			throw new RuntimeException("Could not init Rezenerator: " + e + ": " + e.getMessage(), e);
 		}
+		return processors;
 
 	}
 
@@ -116,7 +120,7 @@ public class RezeneratorRunner {
 	}
 
 	private File getOutFile(final File baseOutDir, final String qualifier, final String bareFileName) {
-		final File outDir = new File(baseOutDir, "drawable-" + qualifier);
+		final File outDir = new File(baseOutDir, DRAWABLE_PREFIX + qualifier);
 		if (!outDir.exists()) {
 			outDir.mkdirs();
 		}
