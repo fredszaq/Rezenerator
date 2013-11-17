@@ -1,6 +1,6 @@
 package com.tlorrain.android.rezenerator.core.processor;
 
-public class ImageMagickTest extends ProcessorTestCase {
+public class ImageMagickXcfTest extends ProcessorTestCase {
 
 	@Override
 	@SuppressWarnings("unchecked")
@@ -10,7 +10,7 @@ public class ImageMagickTest extends ProcessorTestCase {
 
 	@Override
 	public String getBaseFileName() {
-		return "ImageMagickTest.jpg";
+		return "ImageMagickXcfTest.xcf";
 	}
 
 }

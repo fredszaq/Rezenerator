@@ -7,12 +7,14 @@ import com.tlorrain.android.rezenerator.core.Dimensions;
 
 public class ImageMagick extends ExternalProcessProcessor {
 	@Override
-	public ProcessBuilder getProcessBuilder(File inFile, File outFile, Dimensions outDims) {
+	public ProcessBuilder getProcessBuilder(final File inFile, final File outFile, final Dimensions outDims) {
 		try {
 			return new ProcessBuilder("convert", inFile.getCanonicalPath(), //
+					"-background", "#ffffff00", //
 					"-resize", outDims.getWidth() + "x" + outDims.getHeight(), //
+					"-layers", "flatten", //
 					outFile.getCanonicalPath());
-		} catch (IOException e) {
+		} catch (final IOException e) {
 			throw new RuntimeException(e);
 		}
 	}
