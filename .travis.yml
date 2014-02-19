@@ -19,8 +19,6 @@ before_install:
 script:
  # main build
  - mvn clean install
- # build the sample project
- - mvn clean install -f rezenerator-maven-sample/pom.xml
 
 
 
