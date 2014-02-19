@@ -7,6 +7,7 @@
 	<version>1.0-SNAPSHOT</version>
 	<name>rezenerator</name>
 	<url>https://github.com/fredszaq/Rezenerator</url>
+	<description>Tool automating drawable conversion and scaling for Android projects</description>
 	<scm>
 		<connection>scm:git:git@github.com:fredszaq/Rezenerator.git</connection>
 		<developerConnection>scm:git:git@github.com:fredszaq/Rezenerator.git</developerConnection>
