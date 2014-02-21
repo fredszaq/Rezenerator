@@ -25,7 +25,7 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
 		<!-- Plugins -->
-		<android-maven-plugin.version>3.6.0</android-maven-plugin.version>
+		<android-maven-plugin.version>3.8.2</android-maven-plugin.version>
 		<maven-compiler-plugin.version>2.3.2</maven-compiler-plugin.version>
 		<maven-clean-plugin.version>2.4.1</maven-clean-plugin.version>
 		<maven-resources-plugin.version>2.6</maven-resources-plugin.version>
