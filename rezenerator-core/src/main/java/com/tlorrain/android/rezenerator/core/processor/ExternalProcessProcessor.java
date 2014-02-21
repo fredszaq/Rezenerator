@@ -6,11 +6,12 @@ import com.tlorrain.android.rezenerator.core.Dimensions;
 import com.tlorrain.android.rezenerator.core.log.Logger;
 import com.tlorrain.android.rezenerator.core.utils.ExternalProcessUtils;
 
-public abstract class ExternalProcessProcessor implements Processor {
+public abstract class ExternalProcessProcessor extends BaseProcessor {
 
 	// TODO add a timeout ?
 
-	public boolean process(File inFile, File outFile, Dimensions outDims, Logger logger) {
+	@Override
+	public boolean process(final File inFile, final File outFile, final Dimensions outDims, final Logger logger) {
 		return ExternalProcessUtils.executeProcess(getProcessBuilder(inFile, outFile, outDims), logger) == 0;
 	}
 

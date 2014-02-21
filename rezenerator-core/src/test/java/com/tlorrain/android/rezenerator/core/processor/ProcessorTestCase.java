@@ -10,11 +10,12 @@ import org.junit.Test;
 
 import com.tlorrain.android.rezenerator.core.Dimensions;
 import com.tlorrain.android.rezenerator.core.log.NoopLogger;
+import com.tlorrain.android.rezenerator.core.utils.JPGFileUtils;
 import com.tlorrain.android.rezenerator.core.utils.PNGFileUtils;
 
 public abstract class ProcessorTestCase {
 
-	private File outDir = new File("target/processor-tests/" + this.getClass().getSimpleName());
+	private final File outDir = new File("target/processor-tests/" + this.getClass().getSimpleName());
 
 	@Before
 	public void setup() throws Exception {
@@ -25,12 +26,19 @@ public abstract class ProcessorTestCase {
 
 	@Test
 	public void test() throws Exception {
-		String baseFileName = getBaseFileName();
-		String[] split = baseFileName.split("\\.");
-		File outFile = new File(outDir, split[0] + ".png");
-		Dimensions outDims = new Dimensions(512);
-		getProcessorClass().newInstance().process(new File("src/test/resources/processor/" + baseFileName), outFile, outDims, new NoopLogger());
-		assertThat(PNGFileUtils.getDimensions(outFile)).isEqualTo(outDims);
+		final String baseFileName = getBaseFileName();
+		final String[] split = baseFileName.split("\\.");
+		final Processor processor = getProcessorClass().newInstance();
+		final File outFile = new File(outDir, split[0] + "." + processor.extension());
+		final Dimensions outDims = new Dimensions(512);
+		processor.process(new File("src/test/resources/processor/" + baseFileName), outFile, outDims, new NoopLogger());
+		if (processor.extension().equals("png")) {
+			assertThat(PNGFileUtils.getDimensions(outFile)).isEqualTo(outDims);
+		} else {
+			// No check that we are truly a JPG, this will fail is we add
+			// support for an other extension
+			assertThat(JPGFileUtils.getDimensions(outFile)).isEqualTo(outDims);
+		}
 	}
 
 	public abstract String getBaseFileName();

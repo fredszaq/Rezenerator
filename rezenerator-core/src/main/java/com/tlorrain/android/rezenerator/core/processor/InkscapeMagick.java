@@ -11,10 +11,10 @@ import com.tlorrain.android.rezenerator.core.log.Logger;
  * {@link Inkscape} processor output aliased images
  * 
  */
-public class InkscapeMagick implements Processor {
+public class InkscapeMagick extends BaseProcessor {
 
 	@Override
-	public boolean process(File inFile, File outFile, Dimensions outDims, Logger logger) {
+	public boolean process(final File inFile, final File outFile, final Dimensions outDims, final Logger logger) {
 		return new Inkscape().process(inFile, outFile, outDims.multiply(2), logger) //
 				&& new ImageMagick().process(outFile, outFile, outDims, logger);
 	}

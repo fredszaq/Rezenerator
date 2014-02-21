@@ -1,7 +1,5 @@
 package com.tlorrain.android.rezenerator.core;
 
-import static com.tlorrain.android.rezenerator.core.utils.PNGFileUtils.getDimensions;
-
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Modifier;
@@ -18,11 +16,12 @@ import com.tlorrain.android.rezenerator.core.definition.DefinitionFinder;
 import com.tlorrain.android.rezenerator.core.definition.DefinitionReader;
 import com.tlorrain.android.rezenerator.core.log.Logger;
 import com.tlorrain.android.rezenerator.core.processor.Processor;
+import com.tlorrain.android.rezenerator.core.utils.JPGFileUtils;
+import com.tlorrain.android.rezenerator.core.utils.PNGFileUtils;
 
 public class RezeneratorRunner {
 
 	private static final String DRAWABLE_PREFIX = "drawable-";
-	private static final String PNG_EXT = ".png";
 
 	public RunResult run(final Configuration configuration) {
 		final Logger logger = configuration.getLogger();
@@ -40,9 +39,9 @@ public class RezeneratorRunner {
 			logger.info("Processing file: " + inFile.getName());
 			try {
 				final String[] nameSplit = splitFileName(inFile);
-				final String outFileName = nameSplit[0] + PNG_EXT;
 				final DefinitionReader definitionReader = new DefinitionReader(finder.find(nameSplit[1]));
 				final Processor processor = getProcessor(processors, nameSplit[2]);
+				final String outFileName = nameSplit[0] + "." + processor.extension();
 
 				final Set<Entry<String, Dimensions>> entrySet = definitionReader.getConfigurations().entrySet();
 				for (final Entry<String, Dimensions> entry : entrySet) {
@@ -91,8 +90,14 @@ public class RezeneratorRunner {
 		if (!(outFile.exists() && outFile.lastModified() > inFile.lastModified())) {
 			return true;
 		}
-
-		return !dims.equals(getDimensions(outFile));
+		if (outFile.getName().endsWith(".png")) {
+			return !dims.equals(PNGFileUtils.getDimensions(outFile));
+		}
+		if (outFile.getName().endsWith(".jpg")) {
+			return !dims.equals(JPGFileUtils.getDimensions(outFile));
+		}
+		return false; // We don't know the file type and cannot check its size,
+						// lets assume we're good
 	}
 
 	private Map<String, Processor> loadProcessors(final List<String> scannedPackages, final Logger logger) {

@@ -13,7 +13,7 @@ Rezenerator is highly configurable and flexible. The transformations to apply to
 * *android_id* is the android identifier of the resource, the generated files will have the name *android_id.png*
 * *definition_name* is the definition to use to process this resource. A definition is a properties file telling to Rezenerator the sizes of the drawables to generate and the folders where to put them. Common definitions (launcher icons, notification icons...) are provided with the tool, and it is easy to create new ones
 * *processor_name* is the processor to use. A `Processor` is a java class doing the conversion between the input file and the generated one. Rezenerator provides processors for common files format (SVG, PNG, ...) and you can provide yours as well
-* *ext* is the extention of the source file, nothing new here ! 
+* *ext* is the extension of the source file, nothing new here ! 
 
 Rezenerator is available as a standalone jar, a maven plugin and soon a gradle plugin.
 
@@ -35,6 +35,7 @@ rezenerator.def.ldpi = hdpi.divide(2)
 
 ## Available processors
 * ImageMagick for lots of formats (including PNG, PSD, JPG ...)
+* ImageMagickJpg for lots of formats, with an output as a jpg file (usefull for photos)
 * Inkscape for SVG files (and every other format Inkscape can open)
 * InkscapeMagick for same formats as the Inkscape processor, but using a bit of ImageMagick for anti-aliasing
 

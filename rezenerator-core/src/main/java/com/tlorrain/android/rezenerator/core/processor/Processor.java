@@ -9,4 +9,6 @@ public interface Processor {
 
 	boolean process(File inFile, File outFile, Dimensions outDims, Logger logger);
 
+	String extension();
+
 }
