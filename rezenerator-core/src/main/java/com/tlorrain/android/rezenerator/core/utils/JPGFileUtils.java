@@ -11,7 +11,7 @@ import org.apache.commons.io.IOUtils;
 
 import com.tlorrain.android.rezenerator.core.Dimensions;
 
-public class PNGFileUtils {
+public class JPGFileUtils {
 
 	public static Dimensions getDimensions(final File outFile) throws FileNotFoundException, IOException {
 		// this code is largely inspired from
@@ -20,13 +20,24 @@ public class PNGFileUtils {
 		Dimensions dimensions = null;
 		final FileInputStream is = new FileInputStream(outFile);
 		try {
-			// PNG file
-			if (is.read() == 137 && is.read() == 80 && is.read() == 78) {
-				is.skip(15);
-				final int width = readIntBigEndianOnTwoBytes(is);
-				is.skip(2);
-				final int height = readIntBigEndianOnTwoBytes(is);
-				dimensions = new Dimensions(height, width);
+			// JPG file
+			if (is.read() == 0xFF && is.read() == 0xD8) {
+				int height = -1;
+				int width = -1;
+				while (is.read() == 255) {
+					final int marker = is.read();
+					final int len = readIntBigEndianOnTwoBytes(is);
+					if (marker == 192 || marker == 193 || marker == 194) {
+						is.skip(1);
+						height = readIntBigEndianOnTwoBytes(is);
+						width = readIntBigEndianOnTwoBytes(is);
+						break;
+					}
+					is.skip(len - 2);
+				}
+				if (height != -1 && width != -1) {
+					dimensions = new Dimensions(height, width);
+				}
 			}
 		} finally {
 			IOUtils.closeQuietly(is);
