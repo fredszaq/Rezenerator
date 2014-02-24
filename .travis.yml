@@ -14,12 +14,7 @@ before_install:
  - tar xzf android-sdk_r22.3-linux.tgz
  - export ANDROID_HOME=$PWD/android-sdk-linux
  - export PATH=${PATH}:${ANDROID_HOME}/tools:${ANDROID_HOME}/platform-tools
- - android update sdk --filter platform-tools,android-16 --no-ui --force > /dev/null
- 
-script:
- # main build
- - mvn clean install
-
+ - ( sleep 5 && while [ 1 ]; do sleep 1; echo y; done ) | android update sdk --no-ui --filter platform-tool,android-16,build-tools-19.0.2
 
 
 
