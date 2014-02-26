@@ -4,7 +4,7 @@
 	<parent>
 		<groupId>com.tlorrain.android.rezenerator</groupId>
 		<artifactId>rezenerator</artifactId>
-		<version>1.0-RC2</version>
+		<version>1.0-SNAPSHOT</version>
 	</parent>
 	<artifactId>rezenerator-maven-sample</artifactId>
 	<packaging>apk</packaging>
@@ -73,7 +73,7 @@
 			<plugin>
 				<groupId>com.tlorrain.android.rezenerator</groupId>
 				<artifactId>rezenerator-maven-plugin</artifactId>
-				<version>1.0-RC2</version>
+				<version>1.0-SNAPSHOT</version>
 				<executions>
 					<execution>
 						<goals>
