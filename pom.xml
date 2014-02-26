@@ -4,7 +4,7 @@
 	<groupId>com.tlorrain.android.rezenerator</groupId>
 	<artifactId>rezenerator</artifactId>
 	<packaging>pom</packaging>
-	<version>1.0-SNAPSHOT</version>
+	<version>1.0-RC2</version>
 	<name>rezenerator</name>
 	<url>https://github.com/fredszaq/Rezenerator</url>
 	<description>Tool automating drawable conversion and scaling for Android projects</description>
