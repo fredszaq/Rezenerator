@@ -42,16 +42,13 @@ rezenerator.def.ldpi = hdpi.divide(2)
 Please note that these processors use external tools that must be installed and accessible in the path.
 
 ## How to use it ? 
-As this is still a development version, you'll have to compile it, just clone the repository and run a `mvn clean install`. You'll need to have Inkscape and ImageMagick (convert) in you path in order to be able to run the tests. You can skip tests by adding `-DskipTests` to the command line.
-
-You have then two options :
+At the moment, you have two options
 
 ### Standalone jar
-You can use the standalone jar available in the `rezenerator-standalone/target/` directory. As you don't want to bother with dependencies, use `rezenerator-standalone-<version>-jar-with-dependencies.jar`. For now, the jar uses system properties for its configuration, just check the source code to see the ones supported !
-
+You can grab the last version in the [release section](../../releases) of Github.
 
 ### Maven plugin
-You can also use the maven plugin, here is a basic example configuration to use in the pom of your project : 
+You can also use the maven plugin (available on maven central), here is a basic example configuration to use in the pom of your project : 
 
 ```xml
 <build>
@@ -59,7 +56,7 @@ You can also use the maven plugin, here is a basic example configuration to use 
 		<plugin>
 			<groupId>com.tlorrain.android.rezenerator</groupId>
 			<artifactId>rezenerator-maven-plugin</artifactId>
-			<version>1.0-SNAPSHOT</version>
+			<version>1.0-RC2</version>
 			<executions>
 				<execution>
 					<goals>
@@ -67,29 +64,27 @@ You can also use the maven plugin, here is a basic example configuration to use 
 					</goals>
 				</execution>
 			</executions>
-			<configuration>
-				<!-- see the source for available options :D -->
-			</configuration>
-			<dependencies>
-				<!-- any external dependency containing additional processors/definitions-->
-			</dependencies>
 		</plugin>
   </plugins>
 </build>
 ```
 By default, Rezenerator will process files in the `drawable` folder and output them in the correct `res/drawable-*` folder. 
       
-For a more complete example, take a look at the `rezenerator-maven-sample` project. The configuration in the sample is more convenient: it will take over completely the management of the `res` folder (we use the `res` folder and not one in the `target` folder because otherwise the project cannot be imported in Eclipse). Files processed by Rezenerator are then located in the `src/main/android/drawable` directory. Every other files that should normally be placed in the `res` folder are in `src/main/android/res`. It is then easier to use a SCM (you just have to exclude the `res` folder) and you can use the `src/main/android/res` folder as an overlay (any file you put in there will still be available to Android and will take precedence over the ones Rezenerator generates). Note that `src/main/android/res` is processed by the `maven-resource-plugin` and you can use filtering on it !
+For a more complete example, take a look at the [pom](../../blob/master/rezenerator-maven-sample/pom.xml) of the `rezenerator-maven-sample` project. The configuration in the sample is more convenient: it will take over completely the management of the `res` folder (we use the `res` folder and not one in the `target` folder because otherwise the project cannot be imported in Eclipse). Files processed by Rezenerator are then located in the `src/main/android/drawable` directory. Every other files that should normally be placed in the `res` folder are in `src/main/android/res`. It is then easier to use a SCM (you just have to exclude the `res` folder) and you can use the `src/main/android/res` folder as an overlay (any file you put in there will still be available to Android and will take precedence over the ones Rezenerator generates). Note that `src/main/android/res` is processed by the `maven-resource-plugin` and you can use filtering on it !
 
-The maven plugin works in Eclipse with m2e, you will have to refresh the project (F5) after adding a new image of after the first import.
+The maven plugin works in Eclipse with m2e, you will have to refresh the project (F5) after adding a new image of after the first import. 
 
 ## Note
 
 This is still a work in progress !
 
+## Building Rezenerator
+
+If you want to test the latest development version, just clone the repository, install Maven 3.1.1 and run a `mvn clean install`. You'll need to have Inkscape and ImageMagick (convert) in you path in order to be able to run the tests. You can skip tests by adding `-DskipTests` to the command line. 
+
 ## Licence
 
-Copyright 2013 Thibaut Lorrain
+Copyright 2013-2014 Thibaut Lorrain
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
