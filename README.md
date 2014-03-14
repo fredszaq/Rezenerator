@@ -80,7 +80,7 @@ This is still a work in progress !
 
 ## Building Rezenerator
 
-If you want to test the latest development version, just clone the repository, install Maven 3.1.1 and run a `mvn clean install`. You'll need to have Inkscape and ImageMagick (convert) in you path in order to be able to run the tests. You can skip tests by adding `-DskipTests` to the command line. 
+If you want to test the latest development version, just clone the repository, install Maven 3.1.1 and run a `mvn clean install`. You'll need to have Inkscape and ImageMagick (convert) in you path in order to be able to run the tests. You can skip tests by adding `-DskipTests` to the command line. You will also need a recent version of the Android SDK in order to build the sample.
 
 ## Licence
 
