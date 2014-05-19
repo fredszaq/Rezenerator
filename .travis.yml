@@ -4,10 +4,6 @@ android:
   components:
     - build-tools-19.0.2
 
-jdk:
-  - oraclejdk7
-  - openjdk6
-
 before_install:
  # install inkscape and imagemagick
  - sudo apt-get update -qq
