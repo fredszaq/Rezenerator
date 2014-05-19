@@ -1,4 +1,8 @@
-language: java
+language: android
+
+android:
+  components:
+    - build-tools-19.0.2
 
 jdk:
   - oraclejdk7
@@ -8,13 +12,3 @@ before_install:
  # install inkscape and imagemagick
  - sudo apt-get update -qq
  - sudo apt-get install -qq inkscape imagemagick
- # install android SDK
- - if [ `uname -m` = x86_64 ]; then sudo apt-get install -qq --force-yes libgd2-xpm ia32-libs ia32-libs-multiarch > /dev/null; fi
- - wget http://dl.google.com/android/android-sdk_r22.3-linux.tgz
- - tar xzf android-sdk_r22.3-linux.tgz
- - export ANDROID_HOME=$PWD/android-sdk-linux
- - export PATH=${PATH}:${ANDROID_HOME}/tools:${ANDROID_HOME}/platform-tools
- - ( sleep 5 && while [ 1 ]; do sleep 1; echo y; done ) | android update sdk --no-ui --filter platform-tool,android-16,build-tools-19.0.3
-
-
-
