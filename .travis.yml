@@ -8,3 +8,6 @@ before_install:
  # install inkscape and imagemagick
  - sudo apt-get update -qq
  - sudo apt-get install -qq inkscape imagemagick
+
+after_success:
+  - mvn clean cobertura:cobertura coveralls:cobertura
