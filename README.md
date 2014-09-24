@@ -1,4 +1,4 @@
-# Rezenerator [![Build Status](https://travis-ci.org/fredszaq/Rezenerator.png?branch=master)](https://travis-ci.org/fredszaq/Rezenerator)
+# Rezenerator [![Build Status](https://travis-ci.org/fredszaq/Rezenerator.png?branch=master)](https://travis-ci.org/fredszaq/Rezenerator) [![Coverage Status](https://img.shields.io/coveralls/fredszaq/Rezenerator.svg)](https://coveralls.io/r/fredszaq/Rezenerator)
 
 ![Rezenerator icon](../../raw/master/rezenerator.png)
 
