@@ -10,4 +10,4 @@ before_install:
  - sudo apt-get install -qq inkscape imagemagick
 
 after_success:
-  - mvn clean cobertura:cobertura coveralls:cobertura -pl\!rezenerator-maven-sample
+  - mvn clean cobertura:cobertura coveralls:cobertura -pl \!rezenerator-maven-sample
