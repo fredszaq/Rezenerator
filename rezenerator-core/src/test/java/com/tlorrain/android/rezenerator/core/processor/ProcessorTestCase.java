@@ -3,10 +3,12 @@ package com.tlorrain.android.rezenerator.core.processor;
 import static org.fest.assertions.Assertions.assertThat;
 
 import java.io.File;
+import java.io.IOException;
 
 import org.apache.commons.io.FileUtils;
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.Mockito;
 
 import com.tlorrain.android.rezenerator.core.Dimensions;
 import com.tlorrain.android.rezenerator.core.log.NoopLogger;
@@ -39,6 +41,13 @@ public abstract class ProcessorTestCase {
 			// support for an other extension
 			assertThat(JPGFileUtils.getDimensions(outFile)).isEqualTo(outDims);
 		}
+	}
+
+	@Test(expected = RuntimeException.class)
+	public void test_error() throws Exception {
+		final File mockFile = Mockito.mock(File.class);
+		Mockito.when(mockFile.getCanonicalPath()).thenThrow(new IOException());
+		getProcessorClass().newInstance().process(mockFile, mockFile, new Dimensions(0), new NoopLogger());
 	}
 
 	public abstract String getBaseFileName();
